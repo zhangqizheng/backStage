@@ -573,7 +573,6 @@ export default {
     }
   },
   created() {
-    console.log(11111111111, this.ruleForm)
     getFieldInfo({ id: this.ruleForm.id }).then(res => {
       if (res.status === 0) {
         this.formData = res.data

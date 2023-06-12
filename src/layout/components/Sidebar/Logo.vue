@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      title: '中国电信-翼设计',
+      title: '天翼云-翼设计',
       logo: logoImg,
       screenUrl: '/screenMain'
     }

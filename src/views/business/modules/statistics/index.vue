@@ -413,7 +413,6 @@ export default {
         this.siteList = res.data
       })
       setTimeout(() => {
-        console.log(111111111111, this.formData)
       })
     },
     // 机构性质图表

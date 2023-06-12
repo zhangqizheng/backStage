@@ -8,10 +8,12 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import homeRouter from './modules/home' // 主控台
-import orgManage from './modules/orgManage' // 承训机构管理
-import statistics from './modules/statistics' // 统计分析
-import screen from './modules/screen' // 可视化管理
-import fundSearch from './modules/fundSearch' // 资助资金管理
+import designManage from './modules/designManage' // 规划设计管理
+
+// import orgManage from './modules/orgManage' // 承训机构管理
+// import statistics from './modules/statistics' // 统计分析
+// import screen from './modules/screen' // 可视化管理
+// import fundSearch from './modules/fundSearch' // 资助资金管理
 
 /**
  * 注意:子菜单只在路由子菜单时出现。长度> = 1
@@ -82,10 +84,12 @@ export const asyncRoutes = [
    *  ***注意***：菜单显示顺序与文件引入顺序显示一致！！！
    **/
   homeRouter,
-  orgManage,
-  fundSearch,
-  statistics,
-  screen,
+  designManage,
+
+  // orgManage,
+  // fundSearch,
+  // statistics,
+  // screen,
 
   // 404 页面必须放在最后!!
   { path: '*', redirect: '/404', hidden: true }
