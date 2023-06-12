@@ -1,65 +1,42 @@
 <template>
   <div class="machineBox">
-    <div class="disBox">
-      <div @click="disabled = !disabled">
-        {{ disabled ? "启用拖拽" : "禁用拖拽" }}
-      </div>
-    </div>
     <!--使用draggable组件-->
     <div class="machineList">
-      <div class="machineItems">
-        <draggable
-          v-model="arr1"
-          :disabled="disabled"
-          :group="groupA"
-          animation="300"
-          :move="onMove"
-          style="flex: 1;"
-          handle=".mover"
-          @start="onStart"
-          @end="onEnd"
-        >
-          <transition-group :style="style">
-            <div
-              v-for="(item, index) in arr1"
-              :key="index"
-              class="item"
-              :class="item.name ? 'mover' : 'noBg'"
-              :style="getNewStyle(arr1, item, index)"
-            >
-              <div class="name">{{ item.name }}</div>
-            </div>
-          </transition-group>
-        </draggable>
-        <div class="numList">
-          <div v-for="(item,index) in 43" :key="index">{{ Math.abs(item - 1 - 43) }}</div>
+      <div v-for="(item,index) in machineData" :key="index" class="machineItems">
+        <div class="machineName">
+          <div class="name">{{ item.machineName }}</div>
+          <div class="icon">
+            <i v-if="item.disabled" class="el-icon-lock" />
+            <i v-else class="el-icon-unlock" />
+          </div>
         </div>
-      </div>
-      <div class="machineItems">
-        <draggable
-          v-model="arr2"
-          :group="groupB"
-          animation="300"
-          :move="onMove"
-          style="flex: 1;"
-          handle=".mover"
-          @start="onStart"
-          @end="onEnd"
-        >
-          <transition-group :style="style">
-            <div
-              v-for="(item, index) in arr2"
-              :key="index"
-              class="item"
-              :class="item.name ? 'mover' : 'noBg'"
-              :style="getNewStyle(arr1, item, index)"
-            >
-              <div class="name">{{ item.name }}</div>
-            </div>
-          </transition-group>
-        </draggable>
-        <div class="numList">
-          <div v-for="(item,index) in 43" :key="index">{{ Math.abs(item - 1 - 43) }}</div>
+        <div class="machineContent">
+          <draggable
+            v-model="item.list"
+            :disabled="item.disabled"
+            :group="groupOption"
+            animation="300"
+            :move="onMove"
+            style="flex: 1;"
+            handle=".mover"
+            @start="onStart"
+            @end="onEnd"
+          >
+            <transition-group style="min-height:120px; display: block;" :class="'group-' + index">
+              <div
+                v-for="(items, indexs) in item.list"
+                :key="indexs"
+                class="item"
+                :class="items.name ? 'mover' : 'noBg'"
+                :style="getNewStyle(items)"
+              >
+                <div class="name">{{ items.name }}</div>
+              </div>
+            </transition-group>
+          </draggable>
+          <div class="numList">
+            <div v-for="(items,indexs) in item.allNum" :key="indexs">{{ Math.abs(items - 1 - item.allNum) }}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -77,13 +54,8 @@ export default {
     return {
       drag: false,
       disabled: false,
-      groupA: {
-        name: 'site',
-        pull: true, // 可以拖从
-        put: true // 可以拖出
-      },
-      groupB: {
-        name: 'site',
+      groupOption: {
+        name: 'machine',
         pull: true,
         put: true
       },
@@ -91,6 +63,7 @@ export default {
         {
           machineName: 'C01',
           allNum: 43,
+          disabled: true,
           list: [
             {
               id: '43',
@@ -311,534 +284,451 @@ export default {
         },
         {
           machineName: 'C02',
+          disabled: false,
           allNum: 43,
           list: [
             {
               id: '43',
               name: '',
-              u: 0,
-              sortNo: 1
+              u: 0
             },
             {
               id: '42',
               name: '',
-              u: 0,
-              sortNo: 2
+              u: 0
             },
             {
               id: '41',
               name: '',
-              u: 0,
-              sortNo: 3
+              u: 0
             },
             {
               id: '40',
               name: '25G接入交换机-1',
-              u: 1,
-              sortNo: 4
+              u: 1
             },
             {
               id: '39',
               name: '',
-              u: 0,
-              sortNo: 5
+              u: 0
             },
             {
               id: '38',
               name: '',
-              u: 0,
-              sortNo: 6
+              u: 0
             },
             {
               id: '37',
               name: '',
-              u: 0,
-              sortNo: 7
+              u: 0
             },
             {
               id: '36',
               name: '25G接入交换机-2',
-              u: 2,
-              sortNo: 8
+              u: 2
             },
             {
               id: '35',
               name: '25G接入交换机-2',
-              u: 0,
-              sortNo: 9
+              u: 0
             },
             {
               id: '34',
               name: '',
-              u: 0,
-              sortNo: 10
+              u: 0
             },
             {
               id: '33',
               name: '',
-              u: 0,
-              sortNo: 11
+              u: 0
             },
             {
               id: '32',
               name: '25G接入交换机-3',
-              u: 1,
-              sortNo: 12
+              u: 1
             },
             {
               id: '31',
               name: '',
-              u: 0,
-              sortNo: 13
+              u: 0
             },
             {
               id: '30',
               name: '',
-              u: 0,
-              sortNo: 14
+              u: 0
             },
             {
               id: '29',
               name: '25G接入交换机-4',
-              u: 2,
-              sortNo: 15
+              u: 2
             },
             {
               id: '28',
               name: '25G接入交换机-4',
-              u: 0,
-              sortNo: 16
+              u: 0
             },
             {
               id: '27',
               name: '',
-              u: 0,
-              sortNo: 17
+              u: 0
             },
             {
               id: '26',
               name: '25G接入交换机-5',
-              u: 2,
-              sortNo: 18
+              u: 2
             },
             {
               id: '25',
               name: '25G接入交换机-5',
-              u: 0,
-              sortNo: 19
+              u: 0
             },
             {
               id: '24',
               name: '',
-              u: 0,
-              sortNo: 20
+              u: 0
             },
             {
               id: '23',
               name: '25G接入交换机-6',
-              u: 1,
-              sortNo: 21
+              u: 1
             },
             {
               id: '22',
               name: '',
-              u: 0,
-              sortNo: 22
+              u: 0
             },
             {
               id: '21',
               name: '25G接入交换机-7',
-              u: 3,
-              sortNo: 23
+              u: 3
             },
             {
               id: '20',
               name: '25G接入交换机-7',
-              u: 0,
-              sortNo: 24
+              u: 0
             },
             {
               id: '19',
               name: '25G接入交换机-7',
-              u: 0,
-              sortNo: 25
+              u: 0
             },
             {
               id: '18',
               name: '',
-              u: 0,
-              sortNo: 26
+              u: 0
             },
             {
               id: '17',
               name: '25G接入交换机-8',
-              u: 2,
-              sortNo: 27
+              u: 2
             },
             {
               id: '16',
               name: '25G接入交换机-8',
-              u: 0,
-              sortNo: 28
+              u: 0
             },
             {
               id: '15',
               name: '',
-              u: 0,
-              sortNo: 29
+              u: 0
             },
             {
               id: '14',
               name: '25G接入交换机-9',
-              u: 1,
-              sortNo: 30
+              u: 1
             },
             {
               id: '13',
               name: '',
-              u: 0,
-              sortNo: 31
+              u: 0
             },
             {
               id: '12',
               name: '25G接入交换机-10',
-              u: 1,
-              sortNo: 32
+              u: 1
             },
             {
               id: '11',
               name: '',
-              u: 0,
-              sortNo: 33
+              u: 0
             },
             {
               id: '10',
               name: '25G接入交换机-11',
-              u: 3,
-              sortNo: 34
+              u: 3
             },
             {
               id: '9',
               name: '25G接入交换机-11',
-              u: 0,
-              sortNo: 35
+              u: 0
             },
             {
               id: '8',
               name: '25G接入交换机-11',
-              u: 0,
-              sortNo: 36
+              u: 0
             },
             {
               id: '7',
               name: '',
-              u: 0,
-              sortNo: 37
+              u: 0
             },
             {
               id: '6',
               name: '25G接入交换机-12',
-              u: 2,
-              sortNo: 38
+              u: 2
             },
             {
               id: '5',
               name: '25G接入交换机-12',
-              u: 0,
-              sortNo: 39
+              u: 0
             },
             {
               id: '4',
               name: '',
-              u: 0,
-              sortNo: 40
+              u: 0
             },
             {
               id: '3',
               name: '25G接入交换机-13',
-              u: 1,
-              sortNo: 41
+              u: 1
             },
             {
               id: '2',
               name: '',
-              u: 0,
-              sortNo: 42
+              u: 0
             },
             {
               id: '1',
               name: '',
-              u: 0,
-              sortNo: 43
+              u: 0
             }
           ]
         },
         {
           machineName: 'C03',
+          disabled: false,
           allNum: 43,
           list: [
             {
               id: '43',
               name: '',
-              u: 0,
-              sortNo: 1
+              u: 0
             },
             {
               id: '42',
               name: '',
-              u: 0,
-              sortNo: 2
+              u: 0
             },
             {
               id: '41',
               name: '25G接入交换机-1',
-              u: 1,
-              sortNo: 3
+              u: 1
             },
             {
               id: '40',
               name: '',
-              u: 0,
-              sortNo: 4
+              u: 0
             },
             {
               id: '39',
               name: '25G接入交换机-2',
-              u: 1,
-              sortNo: 5
+              u: 1
             },
             {
               id: '38',
               name: '',
-              u: 0,
-              sortNo: 6
+              u: 0
             },
             {
               id: '37',
               name: '25G接入交换机-3',
-              u: 1,
-              sortNo: 7
+              u: 1
             },
             {
               id: '36',
               name: '',
-              u: 0,
-              sortNo: 8
+              u: 0
             },
             {
               id: '35',
               name: '',
-              u: 0,
-              sortNo: 9
+              u: 0
             },
             {
               id: '34',
               name: '',
-              u: 0,
-              sortNo: 10
+              u: 0
             },
             {
               id: '33',
               name: '',
-              u: 0,
-              sortNo: 11
+              u: 0
             },
             {
               id: '32',
               name: '',
-              u: 0,
-              sortNo: 12
+              u: 0
             },
             {
               id: '31',
               name: '',
-              u: 0,
-              sortNo: 13
+              u: 0
             },
             {
               id: '30',
               name: '',
-              u: 0,
-              sortNo: 14
+              u: 0
             },
             {
               id: '29',
               name: '',
-              u: 0,
-              sortNo: 15
+              u: 0
             },
             {
               id: '28',
               name: '',
-              u: 0,
-              sortNo: 16
+              u: 0
             },
             {
               id: '27',
               name: '',
-              u: 0,
-              sortNo: 17
+              u: 0
             },
             {
               id: '26',
               name: '',
-              u: 0,
-              sortNo: 18
+              u: 0
             },
             {
               id: '25',
               name: '',
-              u: 0,
-              sortNo: 19
+              u: 0
             },
             {
               id: '24',
               name: '',
-              u: 0,
-              sortNo: 20
+              u: 0
             },
             {
               id: '23',
               name: '',
-              u: 0,
-              sortNo: 21
+              u: 0
             },
             {
               id: '22',
               name: '',
-              u: 0,
-              sortNo: 22
+              u: 0
             },
             {
               id: '21',
               name: '',
-              u: 0,
-              sortNo: 23
+              u: 0
             },
             {
               id: '20',
               name: '',
-              u: 0,
-              sortNo: 24
+              u: 0
             },
             {
               id: '19',
               name: '',
-              u: 0,
-              sortNo: 25
+              u: 0
             },
             {
               id: '18',
               name: '',
-              u: 0,
-              sortNo: 26
+              u: 0
             },
             {
               id: '17',
               name: '',
-              u: 0,
-              sortNo: 27
+              u: 0
             },
             {
               id: '16',
               name: '',
-              u: 0,
-              sortNo: 28
+              u: 0
             },
             {
               id: '15',
               name: '',
-              u: 0,
-              sortNo: 29
+              u: 0
             },
             {
               id: '14',
               name: '',
-              u: 0,
-              sortNo: 30
+              u: 0
             },
             {
               id: '13',
               name: '25G接入交换机-9',
-              u: 1,
-              sortNo: 31
+              u: 1
             },
             {
               id: '12',
               name: '',
-              u: 0,
-              sortNo: 32
+              u: 0
             },
             {
               id: '11',
               name: '25G接入交换机-10',
-              u: 4,
-              sortNo: 33
+              u: 4
             },
             {
               id: '10',
               name: '25G接入交换机-10',
-              u: 0,
-              sortNo: 34
+              u: 0
             },
             {
               id: '9',
               name: '25G接入交换机-10',
-              u: 0,
-              sortNo: 35
+              u: 0
             },
             {
               id: '8',
               name: '25G接入交换机-11',
-              u: 0,
-              sortNo: 36
+              u: 0
             },
             {
               id: '7',
               name: '',
-              u: 0,
-              sortNo: 37
+              u: 0
             },
             {
               id: '6',
               name: '25G接入交换机-12',
-              u: 1,
-              sortNo: 38
+              u: 1
             },
             {
               id: '5',
               name: '',
-              u: 0,
-              sortNo: 39
+              u: 0
             },
             {
               id: '4',
               name: '25G接入交换机-13',
-              u: 2,
-              sortNo: 40
+              u: 2
             },
             {
               id: '3',
               name: '25G接入交换机-13',
-              u: 0,
-              sortNo: 41
+              u: 0
             },
             {
               id: '2',
               name: '',
-              u: 0,
-              sortNo: 42
+              u: 0
             },
             {
               id: '1',
               name: '',
-              u: 0,
-              sortNo: 43
+              u: 0
             }
           ]
         },
         {
           machineName: 'C04',
+          disabled: false,
           allNum: 43,
           list: [
             {
@@ -1059,512 +949,36 @@ export default {
           ]
         }
       ],
-      // 定义要被拖拽对象的数组
-      arr1: [
-        {
-          id: '43',
-          name: '',
-          u: 0,
-          sortNo: 1
-        },
-        {
-          id: '42',
-          name: '',
-          u: 0,
-          sortNo: 2
-        },
-        {
-          id: '41',
-          name: '',
-          u: 0,
-          sortNo: 3
-        },
-        {
-          id: '40',
-          name: '25G接入交换机-1',
-          u: 1,
-          sortNo: 4
-        },
-        {
-          id: '39',
-          name: '',
-          u: 0,
-          sortNo: 5
-        },
-        {
-          id: '38',
-          name: '',
-          u: 0,
-          sortNo: 6
-        },
-        {
-          id: '37',
-          name: '',
-          u: 0,
-          sortNo: 7
-        },
-        {
-          id: '36',
-          name: '25G接入交换机-2',
-          u: 2,
-          sortNo: 8
-        },
-        {
-          id: '35',
-          name: '25G接入交换机-2',
-          u: 0,
-          sortNo: 9
-        },
-        {
-          id: '34',
-          name: '',
-          u: 0,
-          sortNo: 10
-        },
-        {
-          id: '33',
-          name: '',
-          u: 0,
-          sortNo: 11
-        },
-        {
-          id: '32',
-          name: '25G接入交换机-3',
-          u: 1,
-          sortNo: 12
-        },
-        {
-          id: '31',
-          name: '',
-          u: 0,
-          sortNo: 13
-        },
-        {
-          id: '30',
-          name: '',
-          u: 0,
-          sortNo: 14
-        },
-        {
-          id: '29',
-          name: '25G接入交换机-4',
-          u: 2,
-          sortNo: 15
-        },
-        {
-          id: '28',
-          name: '25G接入交换机-4',
-          u: 0,
-          sortNo: 16
-        },
-        {
-          id: '27',
-          name: '',
-          u: 0,
-          sortNo: 17
-        },
-        {
-          id: '26',
-          name: '25G接入交换机-5',
-          u: 2,
-          sortNo: 18
-        },
-        {
-          id: '25',
-          name: '25G接入交换机-5',
-          u: 0,
-          sortNo: 19
-        },
-        {
-          id: '24',
-          name: '',
-          u: 0,
-          sortNo: 20
-        },
-        {
-          id: '23',
-          name: '25G接入交换机-6',
-          u: 1,
-          sortNo: 21
-        },
-        {
-          id: '22',
-          name: '',
-          u: 0,
-          sortNo: 22
-        },
-        {
-          id: '21',
-          name: '25G接入交换机-7',
-          u: 3,
-          sortNo: 23
-        },
-        {
-          id: '20',
-          name: '25G接入交换机-7',
-          u: 0,
-          sortNo: 24
-        },
-        {
-          id: '19',
-          name: '25G接入交换机-7',
-          u: 0,
-          sortNo: 25
-        },
-        {
-          id: '18',
-          name: '',
-          u: 0,
-          sortNo: 26
-        },
-        {
-          id: '17',
-          name: '25G接入交换机-8',
-          u: 2,
-          sortNo: 27
-        },
-        {
-          id: '16',
-          name: '25G接入交换机-8',
-          u: 0,
-          sortNo: 28
-        },
-        {
-          id: '15',
-          name: '',
-          u: 0,
-          sortNo: 29
-        },
-        {
-          id: '14',
-          name: '25G接入交换机-9',
-          u: 1,
-          sortNo: 30
-        },
-        {
-          id: '13',
-          name: '',
-          u: 0,
-          sortNo: 31
-        },
-        {
-          id: '12',
-          name: '25G接入交换机-10',
-          u: 1,
-          sortNo: 32
-        },
-        {
-          id: '11',
-          name: '',
-          u: 0,
-          sortNo: 33
-        },
-        {
-          id: '10',
-          name: '25G接入交换机-11',
-          u: 3,
-          sortNo: 34
-        },
-        {
-          id: '9',
-          name: '25G接入交换机-11',
-          u: 0,
-          sortNo: 35
-        },
-        {
-          id: '8',
-          name: '25G接入交换机-11',
-          u: 0,
-          sortNo: 36
-        },
-        {
-          id: '7',
-          name: '',
-          u: 0,
-          sortNo: 37
-        },
-        {
-          id: '6',
-          name: '25G接入交换机-12',
-          u: 2,
-          sortNo: 38
-        },
-        {
-          id: '5',
-          name: '25G接入交换机-12',
-          u: 0,
-          sortNo: 39
-        },
-        {
-          id: '4',
-          name: '',
-          u: 0,
-          sortNo: 40
-        },
-        {
-          id: '3',
-          name: '25G接入交换机-13',
-          u: 1,
-          sortNo: 41
-        },
-        {
-          id: '2',
-          name: '',
-          u: 0,
-          sortNo: 42
-        },
-        {
-          id: '1',
-          name: '',
-          u: 0,
-          sortNo: 43
-        }
-      ],
-      arr2: [
-        {
-          id: '43',
-          name: '',
-          u: 0
-        },
-        {
-          id: '42',
-          name: '',
-          u: 0
-        },
-        {
-          id: '41',
-          name: '',
-          u: 0
-        },
-        {
-          id: '40',
-          name: '',
-          u: 0
-        },
-        {
-          id: '39',
-          name: '',
-          u: 0
-        },
-        {
-          id: '38',
-          name: '',
-          u: 0
-        },
-        {
-          id: '37',
-          name: '',
-          u: 0
-        },
-        {
-          id: '36',
-          name: '',
-          u: 0
-        },
-        {
-          id: '35',
-          name: '',
-          u: 0
-        },
-        {
-          id: '34',
-          name: '',
-          u: 0
-        },
-        {
-          id: '33',
-          name: '',
-          u: 0
-        },
-        {
-          id: '32',
-          name: '',
-          u: 0
-        },
-        {
-          id: '31',
-          name: '',
-          u: 0
-        },
-        {
-          id: '30',
-          name: '',
-          u: 0
-        },
-        {
-          id: '29',
-          name: '',
-          u: 0
-        },
-        {
-          id: '28',
-          name: '',
-          u: 0
-        },
-        {
-          id: '27',
-          name: '',
-          u: 0
-        },
-        {
-          id: '26',
-          name: '',
-          u: 0
-        },
-        {
-          id: '25',
-          name: '',
-          u: 0
-        },
-        {
-          id: '24',
-          name: '',
-          u: 0
-        },
-        {
-          id: '23',
-          name: '',
-          u: 0
-        },
-        {
-          id: '22',
-          name: '',
-          u: 0
-        },
-        {
-          id: '21',
-          name: '',
-          u: 0
-        },
-        {
-          id: '20',
-          name: '',
-          u: 0
-        },
-        {
-          id: '19',
-          name: '',
-          u: 0
-        },
-        {
-          id: '18',
-          name: '',
-          u: 0
-        },
-        {
-          id: '17',
-          name: '',
-          u: 0
-        },
-        {
-          id: '16',
-          name: '',
-          u: 0
-        },
-        {
-          id: '15',
-          name: 'SPINE-3',
-          u: 13
-        },
-        {
-          id: '14',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '13',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '12',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '11',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '10',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '9',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '8',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '7',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '6',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '5',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '4',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '3',
-          name: 'SPINE-3',
-          u: 0
-        },
-        {
-          id: '2',
-          name: '',
-          u: 0
-        },
-        {
-          id: '1',
-          name: '',
-          u: 0
-        }
-      ], // 空数组
+      // 拖出对象
+      fromObj: {},
+      // 拖入对象
+      toObj: {},
+      // 拖出下标
+      fromIndex: 0,
+      // 拖入对象
+      toIndex: 0,
       // 空数组之在的样式，设置了这个样式才能拖入
       style: 'min-height:120px;display: block;'
     }
   },
   mounted() {
-    const nameList = document.querySelectorAll('.name')
-    nameList.forEach((item, index) => {
-      if (item.innerText) {
-        // console.log(item)
-      }
-    })
-    this.getMergeStyle(this.arr1)
-    this.getMergeStyle(this.arr2)
+    this.getMergeStyle()
   },
   methods: {
     // 数据初始化
-    getMergeStyle(arr) {
-      arr.forEach((item, index) => {
-        if (item.u > 1) {
-          for (let i = 1; i < item.u; i++) {
-            arr.splice(index + 1, 1)
+    getMergeStyle() {
+      this.machineData.forEach(item => {
+        item.list.forEach((items, index) => {
+          if (items.u > 1) {
+            for (let i = 1; i < items.u; i++) {
+              item.list.splice(index + 1, 1)
+            }
           }
-        }
+        })
       })
-      console.log(arr)
     },
     // 合并列
-    getNewStyle(arr, item, index) {
+    getNewStyle(item) {
       const oneU = { height: '20px' }
       const moreU = { height: 20 * item.u + 'px' }
       if (item.u === 1 || item.u === 0) {
@@ -1573,19 +987,39 @@ export default {
         return moreU
       }
     },
-    // 开始移动事件
-    onMove(e, originalEvent) {
-      console.log('move', e, originalEvent)
-    },
     // 开始拖拽事件
     onStart(e) {
-      console.log('start', e)
+      // console.log('start', e)
       this.drag = true
+      this.fromIndex = e.from.className.split('-')[1]
     },
     // 拖拽结束事件
     onEnd(e) {
-      console.log('end', e)
+      // console.log('end', e)
       this.drag = false
+      // console.log(e.from.className.split('-')[1], e.to.className.split('-')[1])
+      console.log(this.fromIndex, this.toIndex)
+      if (this.fromIndex !== this.toIndex) {
+        // 原机柜增加空
+        if (this.fromObj.element.u > 0) {
+          for (let i = 0; i < this.fromObj.element.u; i++) {
+            // 拖出数组增加空层
+            const obj = { ...this.fromObj.element, name: '', u: 0 }
+            this.machineData[this.fromIndex].list.splice(this.fromObj.index, 0, obj)
+            // 拖入数组删除空层
+            this.machineData[this.toIndex].list.splice(this.toObj.index + 1, 1)
+            this.$set(this.machineData[this.toIndex].list[this.toObj.index], 'id', Math.abs(this.toObj.index - 43).toString())
+            console.log(this.fromObj.index, this.toObj.index, this.machineData[this.fromIndex].list, this.machineData[this.toIndex].list)
+          }
+        }
+      }
+    },
+    // 开始移动事件
+    onMove(e) {
+      // console.log('move', e)
+      this.fromObj = e.draggedContext
+      this.toObj = e.relatedContext
+      this.toIndex = e.to.className.split('-')[1]
     }
   }
 }
@@ -1597,19 +1031,26 @@ export default {
   box-sizing: border-box;
   position: relative;
   font-size: 12px;
-  .disBox {
-    position: absolute;
-    top: 0px;
-    right: 10px;
-    padding: 6px 16px;
-    background: #ddd;
-    border-radius: 5px;
-    cursor: pointer;
-  }
   .machineList {
     width: 100%;
     display: flex;
-    .machineItems {
+    .machineName{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-bottom: 6px;
+      padding: 0 5px;
+      box-sizing: border-box;
+      .name{
+        margin: auto;
+      }
+      .icon{
+        font-size: 20px;
+      }
+    }
+    .machineContent {
       width: 240px;
       border-top: solid 1px #aaa;
       display: flex;
@@ -1629,9 +1070,6 @@ export default {
       .item:hover {
         cursor: move;
       }
-      .item + .item {
-        // margin-top: 6px;
-      }
       .noBg {
         background: #fff;
       }
@@ -1647,9 +1085,6 @@ export default {
           border: solid 1px #aaa;
           border-top: 0;
           border-left: 0;
-        }
-        div + div {
-          // margin-top: 6px;
         }
       }
     }
