@@ -2,7 +2,7 @@ const machineData = [
   {
     machineName: 'C01',
     allNum: 43,
-    disabled: true,
+    disabled: false,
     list: [
       {
         id: '43',

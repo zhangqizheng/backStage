@@ -119,17 +119,34 @@ export default {
             // 拖入数组删除空层
             this.machineData[this.toIndex].list.splice(this.toObj.index + 1, 1)
             this.$set(this.machineData[this.toIndex].list[this.toObj.index], 'id', Math.abs(this.toObj.index - 43).toString())
-            console.log(this.fromObj.index, this.toObj.index + 1, this.machineData[this.fromIndex].list, this.machineData[this.toIndex].list)
           }
+
+          // const obj = { ...this.fromObj.element, name: '', u: 0 }
+          // this.machineData[this.fromIndex].list.splice(this.fromObj.index, 0, obj)
+
+          console.log('拖出下标', this.fromObj.index)
+          console.log('拖入下标', this.toObj.index)
+          console.log('拖出数据', this.machineData[this.fromIndex].list[this.fromObj.index])
+          console.log('拖入数据', this.machineData[this.toIndex].list[this.toObj.index])
         }
       }
     },
     // 开始移动事件
     onMove(e) {
-      // console.log('move', e)
+      console.log('move', e)
       this.fromObj = e.draggedContext
       this.toObj = e.relatedContext
       this.toIndex = e.to.className.split('-')[1]
+
+      // this.machineData[this.toIndex].list.forEach((item, index)=>{
+      // if(!item.u){
+      // this.machineData[this.toIndex].list.splice(this.toObj.index, 1)
+      // const obj = { id: Math.abs(index - item.allNum), name: '', u: 0 }
+      // this.machineData[this.toIndex].list.splice(this.toObj.index, 0, obj)
+      // this.$set(this.machineData[this.toIndex].list[this.toObj.index], 'id', Math.abs(this.toObj.index - 43).toString())
+      // }
+      // })
+      // console.log(this.machineData[this.toIndex].list)
     }
   }
 }

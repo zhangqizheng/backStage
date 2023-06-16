@@ -1,1213 +1,228 @@
 <template>
-  <div ref="machineRoom" class="machineRoom">
-    <!-- <div class="machineList" v-for="(item, index) in machineList" :key="index">
-      <div class="machineName">{{ item.machineName }}</div>
-      <div class="machineBox">
-        <div class="machineItems" v-for="(num, i) in item.allNum" :key="i">
-          <div class="name">
-            <span v-for="(items, indexs) in item.list" :key="indexs">
-              <span v-if="Math.abs(num - 1 - item.allNum) == items.num">{{
-                items.name
-              }}</span>
-              <span
-                v-if="
-                  Math.abs(num - 1 - item.allNum) - (items.u - 1) == items.num
-                "
-                class="aaa"
-                >{{ 111 }}</span
-              >
-            </span>
-          </div>
-          <div class="num">{{ Math.abs(num - 1 - item.allNum) }}</div>
-        </div>
-      </div>
-    </div> -->
-
-    <div v-for="(item, index) in machineData" :key="index" class="machineList">
-      <div class="machineName">{{ item.machineName }}</div>
-      <div class="machineBox">
-        <el-table
-          :class="index === 2 ? 'machine' : ''"
-          :data="item.list"
-          :span-method="objectSpanMethod"
-          row-key="id"
-          border
-          :show-header="false"
-          :row-style="{height:'16px'}"
-          :cell-style="{padding:'0px'}"
-          style="width: 240px;"
-        >
-          <el-table-column prop="name" align="center" />
-          <el-table-column prop="id" width="40" align="center" />
-        </el-table>
-        <!-- <div class="numList">
-          <div class="num" v-for="item in 43" :key="item">{{ item }}</div>
-        </div> -->
-      </div>
-    </div>
+  <div class="page-x">
+    <div id="containerG6" class="g6-x" />
   </div>
 </template>
 
 <script>
-import Sortable from 'sortablejs'
+import G6 from '@antv/g6'
+const lineStyle = { stroke: '#000', lineWidth: 2 }
 export default {
+  name: 'Started',
   data() {
     return {
-      machineList: [
-        {
-          machineName: 'C01',
-          allNum: 43,
-          list: [
-            {
-              name: '25G接入交换机-1',
-              num: '40',
-              u: 2
-            },
-            {
-              name: '25G接入交换机-2',
-              num: '32',
-              u: 3
-            },
-            {
-              name: '25G接入交换机-3',
-              num: '24',
-              u: 2
-            },
-            {
-              name: '25G接入交换机-4',
-              num: '18',
-              u: 2
-            }
-          ]
-        }
-      ],
-      machineData: [
-        {
-          machineName: 'C01',
-          allNum: 43,
-          list: [
-            {
-              id: '43',
-              name: '',
-              u: 0
-            },
-            {
-              id: '42',
-              name: '',
-              u: 0
-            },
-            {
-              id: '41',
-              name: '',
-              u: 0
-            },
-            {
-              id: '40',
-              name: '',
-              u: 0
-            },
-            {
-              id: '39',
-              name: '',
-              u: 0
-            },
-            {
-              id: '38',
-              name: '',
-              u: 0
-            },
-            {
-              id: '37',
-              name: '',
-              u: 0
-            },
-            {
-              id: '36',
-              name: '',
-              u: 0
-            },
-            {
-              id: '35',
-              name: '',
-              u: 0
-            },
-            {
-              id: '34',
-              name: '',
-              u: 0
-            },
-            {
-              id: '33',
-              name: '',
-              u: 0
-            },
-            {
-              id: '32',
-              name: '',
-              u: 0
-            },
-            {
-              id: '31',
-              name: '',
-              u: 0
-            },
-            {
-              id: '30',
-              name: '',
-              u: 0
-            },
-            {
-              id: '29',
-              name: '',
-              u: 0
-            },
-            {
-              id: '28',
-              name: '',
-              u: 0
-            },
-            {
-              id: '27',
-              name: '',
-              u: 0
-            },
-            {
-              id: '26',
-              name: '',
-              u: 0
-            },
-            {
-              id: '25',
-              name: '',
-              u: 0
-            },
-            {
-              id: '24',
-              name: '',
-              u: 0
-            },
-            {
-              id: '23',
-              name: '',
-              u: 0
-            },
-            {
-              id: '22',
-              name: '',
-              u: 0
-            },
-            {
-              id: '21',
-              name: '',
-              u: 0
-            },
-            {
-              id: '20',
-              name: '',
-              u: 0
-            },
-            {
-              id: '19',
-              name: '',
-              u: 0
-            },
-            {
-              id: '18',
-              name: '',
-              u: 0
-            },
-            {
-              id: '17',
-              name: '',
-              u: 0
-            },
-            {
-              id: '16',
-              name: '',
-              u: 0
-            },
-            {
-              id: '15',
-              name: 'SPINE-3',
-              u: 13
-            },
-            {
-              id: '14',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '13',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '12',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '11',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '10',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '9',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '8',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '7',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '6',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '5',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '4',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '3',
-              name: 'SPINE-3',
-              u: 0
-            },
-            {
-              id: '2',
-              name: '',
-              u: 0
-            },
-            {
-              id: '1',
-              name: '',
-              u: 0
-            }
-          ]
-        },
-        {
-          machineName: 'C02',
-          allNum: 43,
-          list: [
-            {
-              id: '43',
-              name: '',
-              u: 0,
-              sortNo: 1
-            },
-            {
-              id: '42',
-              name: '',
-              u: 0,
-              sortNo: 2
-            },
-            {
-              id: '41',
-              name: '',
-              u: 0,
-              sortNo: 3
-            },
-            {
-              id: '40',
-              name: '25G接入交换机-1',
-              u: 1,
-              sortNo: 4
-            },
-            {
-              id: '39',
-              name: '',
-              u: 0,
-              sortNo: 5
-            },
-            {
-              id: '38',
-              name: '',
-              u: 0,
-              sortNo: 6
-            },
-            {
-              id: '37',
-              name: '',
-              u: 0,
-              sortNo: 7
-            },
-            {
-              id: '36',
-              name: '25G接入交换机-2',
-              u: 2,
-              sortNo: 8
-            },
-            {
-              id: '35',
-              name: '25G接入交换机-2',
-              u: 0,
-              sortNo: 9
-            },
-            {
-              id: '34',
-              name: '',
-              u: 0,
-              sortNo: 10
-            },
-            {
-              id: '33',
-              name: '',
-              u: 0,
-              sortNo: 11
-            },
-            {
-              id: '32',
-              name: '25G接入交换机-3',
-              u: 1,
-              sortNo: 12
-            },
-            {
-              id: '31',
-              name: '',
-              u: 0,
-              sortNo: 13
-            },
-            {
-              id: '30',
-              name: '',
-              u: 0,
-              sortNo: 14
-            },
-            {
-              id: '29',
-              name: '25G接入交换机-4',
-              u: 2,
-              sortNo: 15
-            },
-            {
-              id: '28',
-              name: '25G接入交换机-4',
-              u: 0,
-              sortNo: 16
-            },
-            {
-              id: '27',
-              name: '',
-              u: 0,
-              sortNo: 17
-            },
-            {
-              id: '26',
-              name: '25G接入交换机-5',
-              u: 2,
-              sortNo: 18
-            },
-            {
-              id: '25',
-              name: '25G接入交换机-5',
-              u: 0,
-              sortNo: 19
-            },
-            {
-              id: '24',
-              name: '',
-              u: 0,
-              sortNo: 20
-            },
-            {
-              id: '23',
-              name: '25G接入交换机-6',
-              u: 1,
-              sortNo: 21
-            },
-            {
-              id: '22',
-              name: '',
-              u: 0,
-              sortNo: 22
-            },
-            {
-              id: '21',
-              name: '25G接入交换机-7',
-              u: 3,
-              sortNo: 23
-            },
-            {
-              id: '20',
-              name: '25G接入交换机-7',
-              u: 0,
-              sortNo: 24
-            },
-            {
-              id: '19',
-              name: '25G接入交换机-7',
-              u: 0,
-              sortNo: 25
-            },
-            {
-              id: '18',
-              name: '',
-              u: 0,
-              sortNo: 26
-            },
-            {
-              id: '17',
-              name: '25G接入交换机-8',
-              u: 2,
-              sortNo: 27
-            },
-            {
-              id: '16',
-              name: '25G接入交换机-8',
-              u: 0,
-              sortNo: 28
-            },
-            {
-              id: '15',
-              name: '',
-              u: 0,
-              sortNo: 29
-            },
-            {
-              id: '14',
-              name: '25G接入交换机-9',
-              u: 1,
-              sortNo: 30
-            },
-            {
-              id: '13',
-              name: '',
-              u: 0,
-              sortNo: 31
-            },
-            {
-              id: '12',
-              name: '25G接入交换机-10',
-              u: 1,
-              sortNo: 32
-            },
-            {
-              id: '11',
-              name: '',
-              u: 0,
-              sortNo: 33
-            },
-            {
-              id: '10',
-              name: '25G接入交换机-11',
-              u: 3,
-              sortNo: 34
-            },
-            {
-              id: '9',
-              name: '25G接入交换机-11',
-              u: 0,
-              sortNo: 35
-            },
-            {
-              id: '8',
-              name: '25G接入交换机-11',
-              u: 0,
-              sortNo: 36
-            },
-            {
-              id: '7',
-              name: '',
-              u: 0,
-              sortNo: 37
-            },
-            {
-              id: '6',
-              name: '25G接入交换机-12',
-              u: 2,
-              sortNo: 38
-            },
-            {
-              id: '5',
-              name: '25G接入交换机-12',
-              u: 0,
-              sortNo: 39
-            },
-            {
-              id: '4',
-              name: '',
-              u: 0,
-              sortNo: 40
-            },
-            {
-              id: '3',
-              name: '25G接入交换机-13',
-              u: 1,
-              sortNo: 41
-            },
-            {
-              id: '2',
-              name: '',
-              u: 0,
-              sortNo: 42
-            },
-            {
-              id: '1',
-              name: '',
-              u: 0,
-              sortNo: 43
-            }
-          ]
-        },
-        {
-          machineName: 'C03',
-          allNum: 43,
-          list: [
-            {
-              id: '43',
-              name: '',
-              u: 0,
-              sortNo: 1
-            },
-            {
-              id: '42',
-              name: '',
-              u: 0,
-              sortNo: 2
-            },
-            {
-              id: '41',
-              name: '25G接入交换机-1',
-              u: 1,
-              sortNo: 3
-            },
-            {
-              id: '40',
-              name: '',
-              u: 0,
-              sortNo: 4
-            },
-            {
-              id: '39',
-              name: '25G接入交换机-2',
-              u: 1,
-              sortNo: 5
-            },
-            {
-              id: '38',
-              name: '',
-              u: 0,
-              sortNo: 6
-            },
-            {
-              id: '37',
-              name: '25G接入交换机-3',
-              u: 1,
-              sortNo: 7
-            },
-            {
-              id: '36',
-              name: '',
-              u: 0,
-              sortNo: 8
-            },
-            {
-              id: '35',
-              name: '',
-              u: 0,
-              sortNo: 9
-            },
-            {
-              id: '34',
-              name: '',
-              u: 0,
-              sortNo: 10
-            },
-            {
-              id: '33',
-              name: '',
-              u: 0,
-              sortNo: 11
-            },
-            {
-              id: '32',
-              name: '',
-              u: 0,
-              sortNo: 12
-            },
-            {
-              id: '31',
-              name: '',
-              u: 0,
-              sortNo: 13
-            },
-            {
-              id: '30',
-              name: '',
-              u: 0,
-              sortNo: 14
-            },
-            {
-              id: '29',
-              name: '',
-              u: 0,
-              sortNo: 15
-            },
-            {
-              id: '28',
-              name: '',
-              u: 0,
-              sortNo: 16
-            },
-            {
-              id: '27',
-              name: '',
-              u: 0,
-              sortNo: 17
-            },
-            {
-              id: '26',
-              name: '',
-              u: 0,
-              sortNo: 18
-            },
-            {
-              id: '25',
-              name: '',
-              u: 0,
-              sortNo: 19
-            },
-            {
-              id: '24',
-              name: '',
-              u: 0,
-              sortNo: 20
-            },
-            {
-              id: '23',
-              name: '',
-              u: 0,
-              sortNo: 21
-            },
-            {
-              id: '22',
-              name: '',
-              u: 0,
-              sortNo: 22
-            },
-            {
-              id: '21',
-              name: '',
-              u: 0,
-              sortNo: 23
-            },
-            {
-              id: '20',
-              name: '',
-              u: 0,
-              sortNo: 24
-            },
-            {
-              id: '19',
-              name: '',
-              u: 0,
-              sortNo: 25
-            },
-            {
-              id: '18',
-              name: '',
-              u: 0,
-              sortNo: 26
-            },
-            {
-              id: '17',
-              name: '',
-              u: 0,
-              sortNo: 27
-            },
-            {
-              id: '16',
-              name: '',
-              u: 0,
-              sortNo: 28
-            },
-            {
-              id: '15',
-              name: '',
-              u: 0,
-              sortNo: 29
-            },
-            {
-              id: '14',
-              name: '',
-              u: 0,
-              sortNo: 30
-            },
-            {
-              id: '13',
-              name: '25G接入交换机-9',
-              u: 1,
-              sortNo: 31
-            },
-            {
-              id: '12',
-              name: '',
-              u: 0,
-              sortNo: 32
-            },
-            {
-              id: '11',
-              name: '25G接入交换机-10',
-              u: 4,
-              sortNo: 33
-            },
-            {
-              id: '10',
-              name: '25G接入交换机-10',
-              u: 0,
-              sortNo: 34
-            },
-            {
-              id: '9',
-              name: '25G接入交换机-10',
-              u: 0,
-              sortNo: 35
-            },
-            {
-              id: '8',
-              name: '25G接入交换机-11',
-              u: 0,
-              sortNo: 36
-            },
-            {
-              id: '7',
-              name: '',
-              u: 0,
-              sortNo: 37
-            },
-            {
-              id: '6',
-              name: '25G接入交换机-12',
-              u: 1,
-              sortNo: 38
-            },
-            {
-              id: '5',
-              name: '',
-              u: 0,
-              sortNo: 39
-            },
-            {
-              id: '4',
-              name: '25G接入交换机-13',
-              u: 2,
-              sortNo: 40
-            },
-            {
-              id: '3',
-              name: '25G接入交换机-13',
-              u: 0,
-              sortNo: 41
-            },
-            {
-              id: '2',
-              name: '',
-              u: 0,
-              sortNo: 42
-            },
-            {
-              id: '1',
-              name: '',
-              u: 0,
-              sortNo: 43
-            }
-          ]
-        },
-        {
-          machineName: 'C04',
-          allNum: 43,
-          list: [
-            {
-              id: '43',
-              name: '',
-              u: 0
-            },
-            {
-              id: '42',
-              name: '',
-              u: 0
-            },
-            {
-              id: '41',
-              name: '25G接入交换机-1',
-              u: 2
-            },
-            {
-              id: '40',
-              name: '25G接入交换机-1',
-              u: 0
-            },
-            {
-              id: '39',
-              name: '',
-              u: 0
-            },
-            {
-              id: '38',
-              name: '',
-              u: 0
-            },
-            {
-              id: '37',
-              name: '25G接入交换机-2',
-              u: 3
-            },
-            {
-              id: '36',
-              name: '25G接入交换机-2',
-              u: 0
-            },
-            {
-              id: '35',
-              name: '25G接入交换机-2',
-              u: 0
-            },
-            {
-              id: '34',
-              name: '',
-              u: 0
-            },
-            {
-              id: '33',
-              name: '',
-              u: 0
-            },
-            {
-              id: '32',
-              name: '',
-              u: 0
-            },
-            {
-              id: '31',
-              name: '',
-              u: 0
-            },
-            {
-              id: '30',
-              name: '',
-              u: 0
-            },
-            {
-              id: '29',
-              name: '',
-              u: 0
-            },
-            {
-              id: '28',
-              name: '',
-              u: 0
-            },
-            {
-              id: '27',
-              name: '',
-              u: 0
-            },
-            {
-              id: '26',
-              name: '25G接入交换机-3',
-              u: 2
-            },
-            {
-              id: '25',
-              name: '25G接入交换机-3',
-              u: 0
-            },
-            {
-              id: '24',
-              name: '',
-              u: 0
-            },
-            {
-              id: '23',
-              name: '25G接入交换机-4',
-              u: 1
-            },
-            {
-              id: '22',
-              name: '',
-              u: 0
-            },
-            {
-              id: '21',
-              name: '25G接入交换机-5',
-              u: 3
-            },
-            {
-              id: '20',
-              name: '25G接入交换机-5',
-              u: 0
-            },
-            {
-              id: '19',
-              name: '25G接入交换机-5',
-              u: 0
-            },
-            {
-              id: '18',
-              name: '',
-              u: 0
-            },
-            {
-              id: '17',
-              name: '25G接入交换机-6',
-              u: 2
-            },
-            {
-              id: '16',
-              name: '25G接入交换机-6',
-              u: 0
-            },
-            {
-              id: '15',
-              name: '',
-              u: 0
-            },
-            {
-              id: '14',
-              name: '25G接入交换机-7',
-              u: 1
-            },
-            {
-              id: '13',
-              name: '',
-              u: 0
-            },
-            {
-              id: '12',
-              name: '25G接入交换机-8',
-              u: 1
-            },
-            {
-              id: '11',
-              name: '',
-              u: 0
-            },
-            {
-              id: '10',
-              name: '25G接入交换机-9',
-              u: 1
-            },
-            {
-              id: '9',
-              name: '',
-              u: 0
-            },
-            {
-              id: '8',
-              name: '',
-              u: 0
-            },
-            {
-              id: '7',
-              name: '',
-              u: 0
-            },
-            {
-              id: '6',
-              name: '25G接入交换机-10',
-              u: 1
-            },
-            {
-              id: '5',
-              name: '',
-              u: 0
-            },
-            {
-              id: '4',
-              name: '',
-              u: 0
-            },
-            {
-              id: '3',
-              name: '25G接入交换机-11',
-              u: 1
-            },
-            {
-              id: '2',
-              name: '',
-              u: 0
-            },
-            {
-              id: '1',
-              name: '',
-              u: 0
-            }
-          ]
-        }
-      ],
-      scroll: 0,
-      num: 1
+      gplot: null, // 拓扑图实例
+      gplotData: {
+        // 点集
+        nodes: [
+          {
+            id: '1',
+            label: '',
+            img: require('@/assets/test/d.jpg'),
+            x: 500,
+            y: 50
+          },
+          {
+            id: '2',
+            label: '',
+            img: require('@/assets/test/e.jpg'),
+            x: 400,
+            y: 200
+          },
+          {
+            id: '3',
+            label: '',
+            img: require('@/assets/test/e.jpg'),
+            x: 600,
+            y: 200
+          },
+          {
+            id: '4',
+            label: '',
+            img: require('@/assets/test/f.jpg'),
+            x: 300,
+            y: 350
+          },
+          {
+            id: '5',
+            label: '',
+            img: require('@/assets/test/f.jpg'),
+            x: 400,
+            y: 350
+          },
+          {
+            id: '6',
+            label: '',
+            img: require('@/assets/test/f.jpg'),
+            x: 500,
+            y: 350
+          },
+          {
+            id: '7',
+            label: '',
+            img: require('@/assets/test/f.jpg'),
+            x: 600,
+            y: 350
+          },
+          {
+            id: '8',
+            label: '',
+            img: require('@/assets/test/f.jpg'),
+            x: 700,
+            y: 350
+          },
+          {
+            id: '9',
+            label: '',
+            img: require('@/assets/test/g.jpg'),
+            x: 200,
+            y: 500
+          },
+          {
+            id: '10',
+            label: '',
+            img: require('@/assets/test/g.jpg'),
+            x: 300,
+            y: 500
+          },
+          {
+            id: '11',
+            label: '',
+            img: require('@/assets/test/g.jpg'),
+            x: 400,
+            y: 500
+          },
+          {
+            id: '12',
+            label: '',
+            img: require('@/assets/test/g.jpg'),
+            x: 500,
+            y: 500
+          },
+          {
+            id: '13',
+            label: '',
+            img: require('@/assets/test/g.jpg'),
+            x: 600,
+            y: 500
+          },
+          {
+            id: '14',
+            label: '',
+            img: require('@/assets/test/g.jpg'),
+            x: 700,
+            y: 500
+          },
+          {
+            id: '15',
+            label: '',
+            img: require('@/assets/test/g.jpg'),
+            x: 800,
+            y: 500
+          }
+        ],
+        // 边集
+        edges: [
+          { source: '1', target: '2', style: lineStyle },
+          { source: '1', target: '3', style: lineStyle },
+          { source: '2', target: '3', style: lineStyle },
+          { source: '2', target: '4', style: lineStyle },
+          { source: '2', target: '5', style: lineStyle },
+          { source: '2', target: '6', style: lineStyle },
+          { source: '2', target: '7', style: lineStyle },
+          { source: '2', target: '8', style: lineStyle },
+          { source: '3', target: '4', style: lineStyle },
+          { source: '3', target: '5', style: lineStyle },
+          { source: '3', target: '6', style: lineStyle },
+          { source: '3', target: '7', style: lineStyle },
+          { source: '3', target: '8', style: lineStyle },
+          { source: '4', target: '5', style: lineStyle },
+          { source: '4', target: '9', style: lineStyle },
+          { source: '4', target: '10', style: lineStyle },
+          { source: '4', target: '11', style: lineStyle },
+          { source: '4', target: '12', style: lineStyle },
+          { source: '4', target: '13', style: lineStyle },
+          { source: '4', target: '14', style: lineStyle },
+          { source: '4', target: '15', style: lineStyle },
+          { source: '5', target: '6', style: lineStyle },
+          { source: '5', target: '9', style: lineStyle },
+          { source: '5', target: '10', style: lineStyle },
+          { source: '5', target: '11', style: lineStyle },
+          { source: '5', target: '12', style: lineStyle },
+          { source: '5', target: '13', style: lineStyle },
+          { source: '5', target: '14', style: lineStyle },
+          { source: '5', target: '15', style: lineStyle },
+          { source: '6', target: '7', style: lineStyle },
+          { source: '6', target: '9', style: lineStyle },
+          { source: '6', target: '10', style: lineStyle },
+          { source: '6', target: '11', style: lineStyle },
+          { source: '6', target: '12', style: lineStyle },
+          { source: '6', target: '13', style: lineStyle },
+          { source: '6', target: '14', style: lineStyle },
+          { source: '6', target: '15', style: lineStyle },
+          { source: '7', target: '8', style: lineStyle },
+          { source: '7', target: '9', style: lineStyle },
+          { source: '7', target: '10', style: lineStyle },
+          { source: '7', target: '11', style: lineStyle },
+          { source: '7', target: '12', style: lineStyle },
+          { source: '7', target: '13', style: lineStyle },
+          { source: '7', target: '14', style: lineStyle },
+          { source: '7', target: '15', style: lineStyle },
+          { source: '8', target: '9', style: lineStyle },
+          { source: '8', target: '10', style: lineStyle },
+          { source: '8', target: '11', style: lineStyle },
+          { source: '8', target: '12', style: lineStyle },
+          { source: '8', target: '13', style: lineStyle },
+          { source: '8', target: '14', style: lineStyle },
+          { source: '8', target: '15', style: lineStyle }
+        ]
+      }
     }
   },
-  computed: {},
   mounted() {
-    this.init()
-    this.$nextTick(() => {
-      this.initSortTable()
-    })
-    // window.onwheel = () => {
-    //   let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    //   let scroll = scrollTop - this.scroll;
-    //   this.scroll = scrollTop;
-    //   console.log(scroll)
-    //   if(scroll < 0){
-    //     this.num += 0.01
-    //     this.$refs.machineRoom.style.transform = `scale(${this.num}, ${this.num})`
-    //     console.log('up',this.num)
-    //   }else{
-    //     this.num -= 0.01
-    //     this.$refs.machineRoom.style.transform = `scale(${this.num}, ${this.num})`
-    //     console.log('down',this.num)
-    //   }
-    // }
+    this.drawing()
   },
   methods: {
-    init() {
-      this.machineData[1].list.sort((a, b) => {
-        return a.sortNo - b.sortNo
-      })
-    },
-    initSortTable() {
-      const tbody = document.querySelector('.machine > .el-table__body-wrapper tbody')
-      console.log(tbody)
-      // 拖拽排序
-      Sortable.create(tbody, {
-        delay: 0,
-        animation: 300, // 拖拽延时，效果更好看
-        onEnd: async(evt) => {
-          console.log(evt)
-          this.machineData[1].list.splice(
-            evt.newIndex,
-            0,
-            this.machineData[1].list.splice(evt.oldIndex, 1)[0]
-          )
-          this.machineData[1].list.forEach((item, index) => {
-            item.sortNo = index + 1 // 重新给sortNo赋值
-          })
-          // 接口(param).then((res) => {})
-        }
-      })
-    },
-    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-      // console.log(row, column, rowIndex, columnIndex)
-      if (columnIndex === 0) {
-        if (row.name) {
-          return {
-            rowspan: row.u,
-            colspan: 1
+    drawing() {
+      this.gplot = new G6.Graph({
+        container: 'containerG6', // String | HTMLElement，必须，容器 id 或容器本身
+        width: 1000, // 设置画布宽度。 Number，必须
+        height: 600, // / 设置画布高度。Number，必须
+        // 布局设置
+        // 布局文档：https://g6.antv.vision/zh/docs/manual/tutorial/layout
+        // 默认节点配置（这里的配置是全局的配置，将会在所有节点上生效）
+        // 节点文档：https://g6.antv.vision/zh/docs/manual/middle/elements/nodes/defaultNode
+        defaultNode: {
+          type: 'image',
+          size: [50, 50],
+          labelCfg: {
+            // 文本配置项  https://g6.antv.vision/zh/docs/manual/middle/elements/nodes/defaultNode#%E6%A0%87%E7%AD%BE%E6%96%87%E6%9C%AC-label-%E5%8F%8A%E5%85%B6%E9%85%8D%E7%BD%AE--labelcfg
+            style: {
+              fontSize: 14, // 文本字体大小
+              fill: '#e07a5f' // 文本颜色
+            }
           }
         }
-      }
-    },
-    getNum(val, num) {
-      const arr = num.split(',')
-      let a = ''
-      arr.forEach((item) => {
-        if (val === item) {
-          a = item
-        }
       })
-      return a
+
+      /**
+       * graph.read(data)
+       * 接收数据，并进行渲染，read 方法的功能相当于 data 和 render 方法的结合。
+       * 官方文档：https://g6.antv.vision/zh/docs/api/graphFunc/data#graphreaddata
+       *
+       * 等同于
+       * graph.data(data.value)
+       * graph.render()
+       */
+      this.gplot.read(this.gplotData)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.machineRoom {
+.g6-x {
   width: 100%;
-  display: flex;
-  flex-wrap: nowrap;
-  font-size: 12px;
-  padding-bottom: 20px;
-  box-sizing: border-box;
-  .machineList {
-    width: 240px;
-    // margin: 0 50px 100px 0;
-    margin-right: 50px;
-    .machineName {
-      width: 100%;
-      text-align: center;
-    }
-    .machineBox {
-      display: flex;
-      // border: 1px solid #ddd;
-      .machineItems {
-        width: 100%;
-        height: 18px;
-        line-height: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        .name {
-          height: 100%;
-          flex: 1;
-          text-align: center;
-          border-bottom: 1px solid #ddd;
-        }
-        .num {
-          width: 30px;
-          height: 100%;
-          text-align: center;
-          border-left: 1px solid #ddd;
-          border-bottom: 1px solid #ddd;
-        }
-        .aaa {
-          border: 0;
-        }
-      }
-      // .numList{
-      //   border: 1px solid #000;
-      //   border-left: 0;
-      //   .num{
-      //     width: 30px;
-      //     height: 17px;
-      //     line-height: 17px;
-      //     text-align: center;
-      //     border-bottom: 1px solid #000;
-      //   }
-      // }
-    }
-  }
-}
-::v-deep {
-  .el-table {
-    flex: initial;
-    border-color: #000;
-  }
-  .el-table th,
-  .el-table td {
-    padding: 0;
-    height: 16px;
-    font-size: 12px;
-    line-height: 16px;
-    border-color: #000;
-  }
-  .el-table .cell{
-    height: 16px;
-    font-size: 12px;
-    line-height: 16px;
-  }
-  .el-table--border::after, .el-table::before {
-    background-color: #000;
-  }
+  height: 100%;
 }
 </style>
