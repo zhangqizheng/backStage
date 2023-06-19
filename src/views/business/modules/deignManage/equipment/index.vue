@@ -831,7 +831,7 @@ export default {
       // 正在查询
       loading: false,
       // 抽屉开关
-      drawerFlag: true,
+      drawerFlag: false,
       typeOption: [{
         value: '1',
         label: '设备1'
