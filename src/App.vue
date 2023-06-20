@@ -24,21 +24,21 @@ export default {
 }
 </script>
 <style lang="scss">
-::-webkit-scrollbar {
-  width: 2px;
-  height: 3px;
-  background-color: rgba(255, 255, 255, 0);
-}
-::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 6px rgb(189, 189, 189);
-  background-color: rgb(255, 255, 255);
-}
-::-webkit-scrollbar-thumb:hover {
-  border-radius: 10px;
-  -webkit-box-shadow: inset 0 0 60px rgb(62, 142, 227);
-  background-color: rgb(224, 221, 221);
-}
+// ::-webkit-scrollbar {
+//   width: 10px;
+//   height: 4px;
+//   background-color: rgba(255, 255, 255, 0);
+// }
+// ::-webkit-scrollbar-thumb {
+//   border-radius: 10px;
+//   -webkit-box-shadow: inset 0 0 6px rgb(189, 189, 189);
+//   background-color: rgb(255, 255, 255);
+// }
+// ::-webkit-scrollbar-thumb:hover {
+//   border-radius: 10px;
+//   -webkit-box-shadow: inset 0 0 60px rgb(62, 142, 227);
+//   background-color: rgb(224, 221, 221);
+// }
 .el-table__header{
     width: 100% !important;
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="machineBox">
     <!--使用draggable组件-->
-    <div class="machineList">
+    <div ref="machineList" class="machineList" @mousewheel.prevent="rollImg">
       <div v-for="(item,index) in machineData" :key="index" class="machineItems">
         <div class="machineName">
           <div class="name">{{ item.machineName }}</div>
@@ -19,8 +19,8 @@
             :move="onMove"
             style="flex: 1;"
             handle=".mover"
-            @start="onStart"
-            @end="onEnd"
+            @start.stop="onStart"
+            @end.stop="onEnd"
           >
             <transition-group style="min-height:120px; display: block;" :class="'group-' + index">
               <div
@@ -70,40 +70,31 @@ export default {
       // 拖入对象
       toIndex: 0,
       // 空数组之在的样式，设置了这个样式才能拖入
-      style: 'min-height:120px;display: block;'
+      style: 'min-height:120px;display: block;',
+      num: 1,
+      flag: false
     }
   },
   mounted() {
     this.getMergeStyle()
+    this.changeLoction()
   },
   methods: {
-    // 数据初始化
-    getMergeStyle() {
-      this.machineData.forEach(item => {
-        item.list.forEach((items, index) => {
-          if (items.u > 1) {
-            for (let i = 1; i < items.u; i++) {
-              item.list.splice(index + 1, 1)
-            }
-          }
-        })
-      })
-    },
-    // 合并列
-    getNewStyle(item) {
-      const oneU = { height: '20px' }
-      const moreU = { height: 20 * item.u + 'px' }
-      if (item.u === 1 || item.u === 0) {
-        return oneU
-      } else {
-        return moreU
-      }
-    },
     // 开始拖拽事件
     onStart(e) {
+      document.onmousemove = null
+      document.onmouseup = null
+      console.log(2222)
       // console.log('start', e)
       this.drag = true
       this.fromIndex = e.from.className.split('-')[1]
+    },
+    // 开始移动事件
+    onMove(e) {
+      // console.log('move', e)
+      this.fromObj = e.draggedContext
+      this.toObj = e.relatedContext
+      this.toIndex = e.to.className.split('-')[1]
     },
     // 拖拽结束事件
     onEnd(e) {
@@ -131,22 +122,67 @@ export default {
         }
       }
     },
-    // 开始移动事件
-    onMove(e) {
-      console.log('move', e)
-      this.fromObj = e.draggedContext
-      this.toObj = e.relatedContext
-      this.toIndex = e.to.className.split('-')[1]
-
-      // this.machineData[this.toIndex].list.forEach((item, index)=>{
-      // if(!item.u){
-      // this.machineData[this.toIndex].list.splice(this.toObj.index, 1)
-      // const obj = { id: Math.abs(index - item.allNum), name: '', u: 0 }
-      // this.machineData[this.toIndex].list.splice(this.toObj.index, 0, obj)
-      // this.$set(this.machineData[this.toIndex].list[this.toObj.index], 'id', Math.abs(this.toObj.index - 43).toString())
-      // }
-      // })
-      // console.log(this.machineData[this.toIndex].list)
+    // 拖拽
+    changeLoction() {
+      var box = document.querySelector('.machineBox')
+      // 鼠标按下
+      box.onmousedown = (e) => {
+        // 鼠标相对于盒子的位置
+        var offsetX = e.clientX - box.offsetLeft + 15
+        var offsetY = e.clientY - box.offsetTop + 84
+        // 鼠标移动
+        document.onmousemove = (e) => {
+          box.style.left = e.clientX - offsetX + 'px'
+          box.style.top = e.clientY - offsetY + 'px'
+        }
+        // 鼠标抬起
+        document.onmouseup = () => {
+          document.onmousemove = null
+          document.onmouseup = null
+        }
+      }
+    },
+    // 缩放
+    rollImg(e) {
+      const el = this.$refs.machineList
+      var mouseX = e.clientX - el.offsetLeft - 220
+      var mouseY = e.clientY - el.offsetTop - 100
+      if (e.wheelDelta || e.detail) {
+        if (e.wheelDelta > 0 || e.detail < 0) { // 当鼠标滚轮向上滚动时
+          this.num += 0.1
+          el.style.transform = `scale(${this.num}, ${this.num})`
+          el.style.transformOrigin = mouseX + 'px ' + mouseY + 'px'
+        }
+        if (e.wheelDelta < 0 || e.detail > 0) { // 当鼠标滚轮向下滚动时
+          if (this.num > 0.2) {
+            this.num -= 0.1
+            el.style.transform = `scale(${this.num}, ${this.num})`
+            el.style.transformOrigin = mouseX + 'px ' + mouseY + 'px'
+          }
+        }
+      }
+    },
+    // 数据初始化
+    getMergeStyle() {
+      this.machineData.forEach(item => {
+        item.list.forEach((items, index) => {
+          if (items.u > 1) {
+            for (let i = 1; i < items.u; i++) {
+              item.list.splice(index + 1, 1)
+            }
+          }
+        })
+      })
+    },
+    // 合并列
+    getNewStyle(item) {
+      const oneU = { height: '20px' }
+      const moreU = { height: 20 * item.u + 'px' }
+      if (item.u === 1 || item.u === 0) {
+        return oneU
+      } else {
+        return moreU
+      }
     }
   }
 }
@@ -154,7 +190,8 @@ export default {
 <style lang='scss' scoped>
 .machineBox {
   width: 100%;
-  padding-bottom: 20px;
+  height: calc(100vh - 110px);
+  // padding-bottom: 20px;
   box-sizing: border-box;
   position: relative;
   font-size: 12px;
