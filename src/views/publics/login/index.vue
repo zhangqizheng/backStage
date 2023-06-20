@@ -4,7 +4,7 @@
 
       <div class="inner-header flex">
         <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-          <h3 class="title">退役军人教育培训-政府端</h3>
+          <h3 class="title">翼设计</h3>
           <el-form-item prop="username">
             <el-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="userId">
               <svg-icon slot="prefix" icon-class="user" class="el-input__icon input-icon" />

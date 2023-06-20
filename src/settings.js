@@ -8,7 +8,7 @@
  */
 var time = new Date()
 module.exports = {
-  title: '退役军人教育培训-政府端',
+  title: '翼设计',
   /**
    * @type {boolean} true | false
    * @description 是否显示设置右侧面板
