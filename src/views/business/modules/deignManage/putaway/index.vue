@@ -55,7 +55,7 @@
       :visible.sync="drawerFlag"
     >
       <div class="addFormBox">
-        <el-form ref="formInline" :model="addForm" label-width="80px">
+        <el-form ref="formInline" :model="addForm" :rules="rules" label-width="80px">
           <!-- 主要信息 -->
           <div class="equipmentNum">
             <div class="headTitle noMargin">
@@ -66,18 +66,18 @@
               <div class="allNum">
                 <i class="el-icon-document-copy" />
                 <span class="numTitle">设备总数 </span>
-                <span class="numVal">600</span>
+                <span class="numVal">{{ addForm.deviceAllNum }}</span>
               </div>
               <div class="upNum">
                 <i class="el-icon-upload2" />
                 <span class="numTitle">可上架设备总数 </span>
-                <span class="numVal">450</span>
+                <span class="numVal">{{ addForm.deviceCanNum }}</span>
               </div>
             </div>
           </div>
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item label="设备角色" prop="role">
+              <el-form-item label="设备角色" prop="roleId">
                 <el-select
                   v-model="deviceData"
                   style="width: 100%;"
@@ -104,7 +104,7 @@
                 </div>
                 <div class="upNum">
                   <span class="numTitle">所选设备可上架数量</span>
-                  <span class="numVal blueStyle">{{ addForm.roleUpNum ? addForm.roleUpNum : 0 }}</span>
+                  <span class="numVal blueStyle">{{ addForm.roleCanNum ? addForm.roleCanNum : 0 }}</span>
                 </div>
               </div>
             </el-col>
@@ -115,7 +115,7 @@
           </div>
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item label="设备预上架机柜编号" prop="role" label-width="150px">
+              <el-form-item label="设备预上架机柜编号" prop="cabinet" label-width="150px">
                 <el-select
                   v-model="addForm.cabinet"
                   style="width: 100%;"
@@ -135,8 +135,8 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item label="单机柜预布放数量" prop="role" label-width="150px">
-                <el-input-number v-model.number="addForm.num" size="small" :min="1" :max="20" controls-position="right" style="width: 100px;" />
+              <el-form-item label="单机柜预布放数量" prop="placeNum" label-width="150px">
+                <el-input-number v-model.number="addForm.placeNum" size="small" :min="1" :max="20" controls-position="right" style="width: 100px;" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -170,7 +170,22 @@ export default {
       // 上架设备抽屉开关
       drawerFlag: false,
       // 上架设备数据
-      addForm: {},
+      addForm: {
+        // 设备总数量
+        deviceAllNum: 600,
+        // 可上架数量
+        deviceCanNum: 350,
+        // 上架的机柜号
+        cabinet: [],
+        // 设备角色Id
+        roleId: '',
+        // 设备角色数量
+        roleAllNum: '',
+        // 设备角色可上架数量
+        roleCanNum: '',
+        // 单机柜放置数量
+        placeNum: ''
+      },
       // 设备角色
       deviceData: {},
       // 设备拖拽标识
@@ -255,8 +270,20 @@ export default {
       toIndex: 0,
       // 空数组之在的样式，设置了这个样式才能拖入
       style: 'min-height:120px;display: block;',
-      num: 1,
-      flag: false
+      // 缩放比例
+      scaleNum: 1,
+      // 校验
+      rules: {
+        roleId: [
+          { required: true, message: '请选择设备角色', trigger: 'change' }
+        ],
+        cabinet: [
+          { required: true, message: '请选择设备预上架机柜编号', trigger: 'change' }
+        ],
+        placeNum: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ]
+      }
     }
   },
   mounted() {
@@ -266,8 +293,12 @@ export default {
   methods: {
     // 上架设备
     putaway() {
-      console.log('上架设备')
-      this.drawerFlag = false
+      console.log('上架设备', this.addForm)
+      this.$refs.formInline.validate((valid) => {
+        if (valid) {
+          this.drawerFlag = false
+        }
+      })
     },
     // 开始拖拽事件
     onStart(e) {
@@ -365,14 +396,14 @@ export default {
       var mouseY = e.clientY - el.offsetTop - 100
       if (e.wheelDelta || e.detail) {
         if (e.wheelDelta > 0 || e.detail < 0) { // 当鼠标滚轮向上滚动时
-          this.num += 0.1
-          el.style.transform = `scale(${this.num}, ${this.num})`
+          this.scaleNum += 0.1
+          el.style.transform = `scale(${this.scaleNum}, ${this.scaleNum})`
           el.style.transformOrigin = mouseX + 'px ' + mouseY + 'px'
         }
         if (e.wheelDelta < 0 || e.detail > 0) { // 当鼠标滚轮向下滚动时
-          if (this.num > 0.2) {
-            this.num -= 0.1
-            el.style.transform = `scale(${this.num}, ${this.num})`
+          if (this.scaleNum > 0.2) {
+            this.scaleNum -= 0.1
+            el.style.transform = `scale(${this.scaleNum}, ${this.scaleNum})`
             el.style.transformOrigin = mouseX + 'px ' + mouseY + 'px'
           }
         }
@@ -402,10 +433,10 @@ export default {
     },
     // 获取设备数量
     getNum(item) {
-      this.addForm.role = item.id
+      this.addForm.roleId = item.id
       this.addForm.roleAllNum = item.allNum
-      this.addForm.roleUpNum = item.upNum
-      console.log(this.addForm.role, this.addForm.roleAllNum, this.addForm.roleUpNum)
+      this.addForm.roleCanNum = item.upNum
+      console.log(this.addForm.role, this.addForm.roleAllNum, this.addForm.roleCanNum)
     }
   }
 }
