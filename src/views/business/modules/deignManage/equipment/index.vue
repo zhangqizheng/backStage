@@ -2,7 +2,6 @@
   <div>
     <div class="g-box">
       <div class="g-filter">
-        <!-- @keydown.enter.prevent @keyup.enter.native="queryList" -->
         <el-form ref="formInline" :model="pageParam" label-width="120px">
           <el-row :gutter="10">
             <el-col :span="8">
@@ -66,13 +65,11 @@
                   type="primary"
                   icon="el-icon-search"
                   size="small"
-                  :loading="loading"
                 >查询</el-button>
                 <el-button
                   type="info"
                   icon="el-icon-refresh"
                   size="small"
-                  :loading="loading"
                 >重置</el-button>
               </div>
             </el-col>
@@ -333,9 +330,9 @@
           </div>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="产品" prop="name">
+              <el-form-item label="产品" prop="cp">
                 <el-input
-                  v-model="addForm.name"
+                  v-model="addForm.cp"
                   placeholder="请输入设备名称"
                 />
               </el-form-item>
@@ -393,9 +390,9 @@
           </div>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="厂商" prop="name">
+              <el-form-item label="厂商" prop="cs">
                 <el-select
-                  v-model="addForm.role"
+                  v-model="addForm.cs"
                   placeholder="请选择厂商"
                 >
                   <el-option
@@ -408,9 +405,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="型号" prop="role">
+              <el-form-item label="型号" prop="xh">
                 <el-select
-                  v-model="addForm.role"
+                  v-model="addForm.xh"
                   placeholder="请选择型号"
                 >
                   <el-option
@@ -423,9 +420,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="CPU类型" prop="type">
+              <el-form-item label="CPU类型" prop="cupType">
                 <el-select
-                  v-model="addForm.type"
+                  v-model="addForm.cupType"
                   placeholder="请选择CPU类型"
                 >
                   <el-option
@@ -442,12 +439,12 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <el-form-item label="CPU配置" prop="num">
-                <el-input-number v-model="addForm.lu" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <el-input-number v-model="addForm.cpuLu" size="small" :min="1" controls-position="right" style="width: 80px;" />
                 <span class="textMargin">路</span>
-                <el-input-number v-model="addForm.he" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <el-input-number v-model="addForm.cpuHe" size="small" :min="1" controls-position="right" style="width: 80px;" />
                 <span class="textMargin">核</span>
                 <el-input
-                  v-model="addForm.name"
+                  v-model="addForm.cupText"
                   style="width: 200px"
                   placeholder="请输入"
                 />
@@ -458,30 +455,26 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <el-form-item label="内存配置" prop="num">
-                <div v-for="(item,index) in addForm.ncList" :key="index" class="addList">
-                  <div class="data">
-                    <el-input-number v-model="item.a" size="small" :min="1" controls-position="right" style="width: 80px;" />
-                    <span class="textMargin" style="font-size: 20px;">*</span>
-                    <el-input-number v-model="item.b" size="small" :min="1" controls-position="right" style="width: 80px;" />
-                    <span class="textMargin" />
-                    <el-select
-                      v-model="item.c"
-                      style="width: 70px;"
-                      placeholder=""
-                    >
-                      <el-option key="1" label="GB" value="1" />
-                      <el-option key="2" label="TB" value="2" />
-                    </el-select>
-                  </div>
-                  <div class="btnList">
-                    <div v-if="addForm.ncList.length > 1" class="delBtn" @click="delNc(index)">
-                      <el-button type="danger" plain size="small">删除</el-button>
-                    </div>
-                    <div v-if="index === addForm.ncList.length - 1" class="addBtn" @click="addNc()">
-                      <el-button type="primary" plain size="small" icon="el-icon-plus">继续添加</el-button>
-                    </div>
-                  </div>
-                </div>
+                <el-input-number v-model="addForm.ncA" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <span class="textMargin" style="font-size: 20px;">*</span>
+                <el-input-number v-model="addForm.ncB" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <span class="textMargin" />
+                <el-select
+                  v-model="addForm.ncC"
+                  style="width: 70px;"
+                  placeholder=""
+                >
+                  <el-option key="1" label="GB" value="1" />
+                  <el-option key="2" label="TB" value="2" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="" prop="num">
+                <el-input
+                  v-model="addForm.ncD"
+                  style="width: 456px;"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -489,42 +482,38 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <el-form-item label="系统盘" prop="num">
-                <div v-for="(item,index) in addForm.xtpList" :key="index" class="addList">
-                  <div class="data">
-                    <el-input-number v-model="item.a" size="small" :min="1" controls-position="right" style="width: 80px;" />
-                    <span class="textMargin" style="font-size: 20px;">*</span>
-                    <el-input-number v-model="item.b" size="small" :min="1" controls-position="right" style="width: 80px;" />
-                    <span class="textMargin" />
-                    <el-select
-                      v-model="item.c"
-                      style="width: 70px;"
-                      placeholder=""
-                    >
-                      <el-option key="1" label="GB" value="1" />
-                      <el-option key="2" label="TB" value="2" />
-                    </el-select>
+                <el-input-number v-model="addForm.xtA" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <span class="textMargin" style="font-size: 20px;">*</span>
+                <el-input-number v-model="addForm.xtB" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <span class="textMargin" />
+                <el-select
+                  v-model="addForm.xtC"
+                  style="width: 70px;"
+                  placeholder=""
+                >
+                  <el-option key="1" label="GB" value="1" />
+                  <el-option key="2" label="TB" value="2" />
+                </el-select>
 
-                    <span class="textMargin" />
-                    <el-select
-                      v-model="item.d"
-                      style="width: 160px;"
-                      placeholder=""
-                    >
-                      <el-option key="1" label="SATA" value="1" />
-                      <el-option key="2" label="SAS" value="2" />
-                      <el-option key="3" label="SSD" value="3" />
-                      <el-option key="4" label="PCIE NVME SSD" value="4" />
-                    </el-select>
-                  </div>
-                  <div class="btnList">
-                    <div v-if="addForm.xtpList.length > 1" class="delBtn" @click="delXtp(index)">
-                      <el-button type="danger" plain size="small">删除</el-button>
-                    </div>
-                    <div v-if="index === addForm.xtpList.length - 1" class="addBtn" @click="addXtp()">
-                      <el-button type="primary" plain size="small" icon="el-icon-plus">继续添加</el-button>
-                    </div>
-                  </div>
-                </div>
+                <span class="textMargin" />
+                <el-select
+                  v-model="addForm.xtD"
+                  style="width: 160px;"
+                  placeholder=""
+                >
+                  <el-option key="1" label="SATA" value="1" />
+                  <el-option key="2" label="SAS" value="2" />
+                  <el-option key="3" label="SSD" value="3" />
+                  <el-option key="4" label="PCIE NVME SSD" value="4" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="" prop="num">
+                <el-input
+                  v-model="addForm.xtE"
+                  style="width: 456px;"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -532,42 +521,38 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <el-form-item label="数据盘" prop="num">
-                <div v-for="(item,index) in addForm.sjpList" :key="index" class="addList">
-                  <div class="data">
-                    <el-input-number v-model="item.a" size="small" :min="1" controls-position="right" style="width: 80px;" />
-                    <span class="textMargin" style="font-size: 20px;">*</span>
-                    <el-input-number v-model="item.b" size="small" :min="1" controls-position="right" style="width: 80px;" />
-                    <span class="textMargin" />
-                    <el-select
-                      v-model="item.c"
-                      style="width: 70px;"
-                      placeholder=""
-                    >
-                      <el-option key="1" label="GB" value="1" />
-                      <el-option key="2" label="TB" value="2" />
-                    </el-select>
+                <el-input-number v-model="addForm.sjA" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <span class="textMargin" style="font-size: 20px;">*</span>
+                <el-input-number v-model="addForm.sjB" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <span class="textMargin" />
+                <el-select
+                  v-model="addForm.sjC"
+                  style="width: 70px;"
+                  placeholder=""
+                >
+                  <el-option key="1" label="GB" value="1" />
+                  <el-option key="2" label="TB" value="2" />
+                </el-select>
 
-                    <span class="textMargin" />
-                    <el-select
-                      v-model="item.d"
-                      style="width: 160px;"
-                      placeholder=""
-                    >
-                      <el-option key="1" label="SATA" value="1" />
-                      <el-option key="2" label="SAS" value="2" />
-                      <el-option key="3" label="SSD" value="3" />
-                      <el-option key="4" label="PCIE NVME SSD" value="4" />
-                    </el-select>
-                  </div>
-                  <div class="btnList">
-                    <div v-if="addForm.sjpList.length > 1" class="delBtn" @click="delSjp(index)">
-                      <el-button type="danger" plain size="small">删除</el-button>
-                    </div>
-                    <div v-if="index === addForm.sjpList.length - 1" class="addBtn" @click="addSjp()">
-                      <el-button type="primary" plain size="small" icon="el-icon-plus">继续添加</el-button>
-                    </div>
-                  </div>
-                </div>
+                <span class="textMargin" />
+                <el-select
+                  v-model="addForm.sjD"
+                  style="width: 160px;"
+                  placeholder=""
+                >
+                  <el-option key="1" label="SATA" value="1" />
+                  <el-option key="2" label="SAS" value="2" />
+                  <el-option key="3" label="SSD" value="3" />
+                  <el-option key="4" label="PCIE NVME SSD" value="4" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="" prop="sjE">
+                <el-input
+                  v-model="addForm.sjE"
+                  style="width: 456px;"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -575,42 +560,38 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <el-form-item label="缓存盘" prop="num">
-                <div v-for="(item,index) in addForm.hcpList" :key="index" class="addList">
-                  <div class="data">
-                    <el-input-number v-model="item.a" size="small" :min="1" controls-position="right" style="width: 80px;" />
-                    <span class="textMargin" style="font-size: 20px;">*</span>
-                    <el-input-number v-model="item.b" size="small" :min="1" controls-position="right" style="width: 80px;" />
-                    <span class="textMargin" />
-                    <el-select
-                      v-model="item.c"
-                      style="width: 70px;"
-                      placeholder=""
-                    >
-                      <el-option key="1" label="GB" value="1" />
-                      <el-option key="2" label="TB" value="2" />
-                    </el-select>
+                <el-input-number v-model="addForm.hcA" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <span class="textMargin" style="font-size: 20px;">*</span>
+                <el-input-number v-model="addForm.hcB" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <span class="textMargin" />
+                <el-select
+                  v-model="addForm.hcC"
+                  style="width: 70px;"
+                  placeholder=""
+                >
+                  <el-option key="1" label="GB" value="1" />
+                  <el-option key="2" label="TB" value="2" />
+                </el-select>
 
-                    <span class="textMargin" />
-                    <el-select
-                      v-model="item.d"
-                      style="width: 160px;"
-                      placeholder=""
-                    >
-                      <el-option key="1" label="SATA" value="1" />
-                      <el-option key="2" label="SAS" value="2" />
-                      <el-option key="3" label="SSD" value="3" />
-                      <el-option key="4" label="PCIE NVME SSD" value="4" />
-                    </el-select>
-                  </div>
-                  <div class="btnList">
-                    <div v-if="addForm.hcpList.length > 1" class="delBtn" @click="delHcp(index)">
-                      <el-button type="danger" plain size="small">删除</el-button>
-                    </div>
-                    <div v-if="index === addForm.hcpList.length - 1" class="addBtn" @click="addHcp()">
-                      <el-button type="primary" plain size="small" icon="el-icon-plus">继续添加</el-button>
-                    </div>
-                  </div>
-                </div>
+                <span class="textMargin" />
+                <el-select
+                  v-model="addForm.hcD"
+                  style="width: 160px;"
+                  placeholder=""
+                >
+                  <el-option key="1" label="SATA" value="1" />
+                  <el-option key="2" label="SAS" value="2" />
+                  <el-option key="3" label="SSD" value="3" />
+                  <el-option key="4" label="PCIE NVME SSD" value="4" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="" prop="num">
+                <el-input
+                  v-model="addForm.hcE"
+                  style="width: 456px;"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -618,11 +599,11 @@
           <el-row :gutter="10">
             <el-col :span="14">
               <el-form-item label="GPU" prop="num">
-                <el-input-number v-model="addForm.raidCard" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                <el-input-number v-model="addForm.gpuVal" size="small" :min="1" controls-position="right" style="width: 80px;" />
                 <span class="textMargin">*</span>
                 <el-input
-                  v-model="addForm.name"
-                  style="width: 300px;"
+                  v-model="addForm.gpuText"
+                  style="width: 230px;"
                   placeholder="请输入设备名称"
                 />
               </el-form-item>
@@ -693,9 +674,9 @@
                   >
                     <template slot-scope="scope">
                       <div v-for="(item,index) in scope.row.list" :key="index" class="marginStyle">
-                        <el-input-number v-model="item.port1" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                        <el-input-number v-model="item.portOne" size="small" :min="1" controls-position="right" style="width: 80px;" />
                         <span class="textMargin">-</span>
-                        <el-input-number v-model="item.port2" size="small" :min="1" controls-position="right" style="width: 80px;" />
+                        <el-input-number v-model="item.portTwo" size="small" :min="1" controls-position="right" style="width: 80px;" />
                       </div>
                     </template>
                   </el-table-column>
@@ -715,7 +696,7 @@
             </el-col>
           </el-row>
           <!-- 新增板卡信息 -->
-          <el-row :gutter="10">
+          <el-row :gutter="10" style="margin-bottom: 30px;">
             <el-col :span="24">
               <div class="addBk" @click="addBk()">
                 <i class="el-icon-plus" />
@@ -730,8 +711,8 @@
           </div>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="设备标牌功率" prop="gl">
-                <el-input-number v-model="addForm.num" size="small" :min="1" label="请输入设备数量" controls-position="right" style="width:100%;" />
+              <el-form-item label="设备标牌功率" prop="gl" label-width="100px">
+                <el-input-number v-model="addForm.gl" size="small" :min="1" label="请输入设备数量" controls-position="right" style="width:100%;" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -750,9 +731,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="电源类型" prop="type">
+              <el-form-item label="电源类型" prop="dyType">
                 <el-select
-                  v-model="addForm.type"
+                  v-model="addForm.dyType"
                   placeholder=""
                 >
                   <el-option key="1" label="国际交流" value="1" />
@@ -765,11 +746,11 @@
           </el-row>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="插座要求" prop="name">
-                <el-input-number v-model="addForm.yq" size="small" :min="1" :max="6" controls-position="right" style="width: 60px;" />
+              <el-form-item label="插座要求" prop="cz">
+                <el-input-number v-model="addForm.czSl" size="small" :min="1" :max="6" controls-position="right" style="width: 60px;" />
                 <span class="textMargin">*</span>
                 <el-select
-                  v-model="addForm.aa"
+                  v-model="addForm.czGv"
                   style="width: 80px;"
                   placeholder=""
                 >
@@ -792,11 +773,11 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <el-form-item label="设备尺寸（高*宽*深）(mm)" prop="cc" label-width="190px">
-                <el-input-number v-model="addForm.zl" :step="10" size="small" :min="10" controls-position="right" style="width: 100px;" />
+                <el-input-number v-model="addForm.k" :step="10" size="small" :min="10" controls-position="right" style="width: 100px;" />
                 <span class="textMargin">*</span>
-                <el-input-number v-model="addForm.zl" :step="10" size="small" :min="10" controls-position="right" style="width: 100px;" />
+                <el-input-number v-model="addForm.g" :step="10" size="small" :min="10" controls-position="right" style="width: 100px;" />
                 <span class="textMargin">*</span>
-                <el-input-number v-model="addForm.zl" :step="10" size="small" :min="10" controls-position="right" style="width: 100px;" />
+                <el-input-number v-model="addForm.s" :step="10" size="small" :min="10" controls-position="right" style="width: 100px;" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -813,11 +794,11 @@
         <el-button
           size="small"
           @click="drawerFlag = false"
-        >取消</el-button>
+        >关闭</el-button>
         <el-button
           type="primary"
           size="small"
-          @click="drawerFlag = false"
+          @click="addDevice()"
         >保存</el-button>
       </div>
     </el-drawer>
@@ -828,8 +809,6 @@
 export default {
   data() {
     return {
-      // 正在查询
-      loading: false,
       // 抽屉开关
       drawerFlag: false,
       typeOption: [{
@@ -885,47 +864,8 @@ export default {
         page: 0,
         pageSize: 10
       },
-      index: 0,
       // 新增数据
       addForm: {
-        // 内存配置
-        ncList: [
-          {
-            a: '',
-            b: '',
-            c: '1',
-            d: '',
-            e: '',
-            f: '1'
-          }
-        ],
-        // 系统盘配置
-        xtpList: [
-          {
-            a: '',
-            b: '',
-            c: '1',
-            d: '1'
-          }
-        ],
-        // 数据配置
-        sjpList: [
-          {
-            a: '',
-            b: '',
-            c: '1',
-            d: '1'
-          }
-        ],
-        // 缓存盘配置
-        hcpList: [
-          {
-            a: '',
-            b: '',
-            c: '1',
-            d: '1'
-          }
-        ],
         // 板卡配置
         bkList: [
           {
@@ -933,24 +873,8 @@ export default {
               {
                 type: '',
                 num: '',
-                port1: '',
-                port2: ''
-              },
-              {
-                type: '',
-                num: '',
-                port1: '',
-                port2: ''
-              }
-            ]
-          },
-          {
-            list: [
-              {
-                type: '',
-                num: '',
-                port1: '',
-                port2: ''
+                portOne: '',
+                portTwo: ''
               }
             ]
           }
@@ -1044,6 +968,11 @@ export default {
   },
   mounted() {},
   methods: {
+    // 新增设备
+    addDevice() {
+      console.log(this.addForm)
+      // this.drawerFlag = false;
+    },
     // 打开抽屉
     openDrawer() {
       this.drawerFlag = true
@@ -1055,8 +984,8 @@ export default {
           {
             type: '',
             num: '',
-            port1: '',
-            port2: ''
+            portOne: '',
+            portTwo: ''
           }
         ]
       })
@@ -1071,67 +1000,13 @@ export default {
       item.list.push({
         type: '',
         num: '',
-        port1: '',
-        port2: ''
+        portOne: '',
+        portTwo: ''
       })
     },
     // 删除板卡配置信息
     delBkItem(item, index) {
       item.list.splice(index, 1)
-    },
-    // 新增内存配置
-    addNc() {
-      this.addForm.ncList.push({
-        a: '',
-        b: '',
-        c: '1',
-        d: '',
-        e: '',
-        f: '1'
-      })
-    },
-    // 删除内存配置
-    delNc(index) {
-      this.addForm.ncList.splice(index, 1)
-    },
-    // 新增系统盘
-    addXtp() {
-      this.addForm.xtpList.push({
-        a: '',
-        b: '',
-        c: '1',
-        d: '1'
-      })
-    },
-    // 删除系统盘
-    delXtp(index) {
-      this.addForm.xtpList.splice(index, 1)
-    },
-    // 新增数据盘
-    addSjp() {
-      this.addForm.sjpList.push({
-        a: '',
-        b: '',
-        c: '1',
-        d: '1'
-      })
-    },
-    // 删除数据盘
-    delSjp(index) {
-      this.addForm.sjpList.splice(index, 1)
-    },
-    // 新增缓存盘
-    addHcp() {
-      this.addForm.hcpList.push({
-        a: '',
-        b: '',
-        c: '1',
-        d: '1'
-      })
-    },
-    // 删除缓存盘
-    delHcp(index) {
-      this.addForm.hcpList.splice(index, 1)
     },
     // 每页数变化
     handleSizeChange(pageSize) {
@@ -1179,20 +1054,6 @@ export default {
       margin-right: 4px;
     }
   }
-  .addList{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    .btnList{
-      flex: 1;
-      display: flex;
-      padding-left: 10px;
-      .delBtn{
-        margin-right: 10px;
-      }
-    }
-  }
   .addBk{
     width: 100%;
     display: flex;
@@ -1215,6 +1076,9 @@ export default {
     .el-input-number.is-controls-right .el-input__inner{
       padding-left: 0;
       padding-right: 30px;
+    }
+    .el-form-item{
+      margin-bottom: 16px;
     }
     .indexBox{
       width: 100%;
@@ -1242,6 +1106,9 @@ export default {
         cursor: pointer;
         margin-left: auto;
       }
+    }
+    .bkBtn:last-child{
+      border-bottom: 0;
     }
     .marginStyle{
       padding: 5px 0;
