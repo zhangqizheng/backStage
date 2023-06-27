@@ -89,12 +89,10 @@
             <el-button
               size="small"
               plain
-              @click="openDrawer()"
             >下载设备清单</el-button>
             <el-button
               size="small"
               plain
-              @click="openDrawer()"
             >批量删除</el-button>
           </div>
         </div>
@@ -322,7 +320,7 @@
       :visible.sync="drawerFlag"
     >
       <div class="addFormBox">
-        <el-form ref="formInline" :model="addForm" label-width="80px">
+        <el-form ref="formInline" :model="addForm" :rules="rules" label-width="80px">
           <!-- 主要信息 -->
           <div class="headTitle">
             <span class="line" />
@@ -420,9 +418,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="CPU类型" prop="cupType">
+              <el-form-item label="CPU类型" prop="cpuType">
                 <el-select
-                  v-model="addForm.cupType"
+                  v-model="addForm.cpuType"
                   placeholder="请选择CPU类型"
                 >
                   <el-option
@@ -438,7 +436,7 @@
           <!-- CPU配置 -->
           <el-row :gutter="10">
             <el-col :span="24">
-              <el-form-item label="CPU配置" prop="num">
+              <el-form-item label="CPU配置" prop="cpuLu">
                 <el-input-number v-model="addForm.cpuLu" size="small" :min="1" controls-position="right" style="width: 80px;" />
                 <span class="textMargin">路</span>
                 <el-input-number v-model="addForm.cpuHe" size="small" :min="1" controls-position="right" style="width: 80px;" />
@@ -454,7 +452,7 @@
           <!-- 内存配置 -->
           <el-row :gutter="10">
             <el-col :span="24">
-              <el-form-item label="内存配置" prop="num">
+              <el-form-item label="内存配置" prop="ncA">
                 <el-input-number v-model="addForm.ncA" size="small" :min="1" controls-position="right" style="width: 80px;" />
                 <span class="textMargin" style="font-size: 20px;">*</span>
                 <el-input-number v-model="addForm.ncB" size="small" :min="1" controls-position="right" style="width: 80px;" />
@@ -481,7 +479,7 @@
           <!-- 系统盘 -->
           <el-row :gutter="10">
             <el-col :span="24">
-              <el-form-item label="系统盘" prop="num">
+              <el-form-item label="系统盘" prop="xtA">
                 <el-input-number v-model="addForm.xtA" size="small" :min="1" controls-position="right" style="width: 80px;" />
                 <span class="textMargin" style="font-size: 20px;">*</span>
                 <el-input-number v-model="addForm.xtB" size="small" :min="1" controls-position="right" style="width: 80px;" />
@@ -520,7 +518,7 @@
           <!-- 数据盘 -->
           <el-row :gutter="10">
             <el-col :span="24">
-              <el-form-item label="数据盘" prop="num">
+              <el-form-item label="数据盘" prop="sjA">
                 <el-input-number v-model="addForm.sjA" size="small" :min="1" controls-position="right" style="width: 80px;" />
                 <span class="textMargin" style="font-size: 20px;">*</span>
                 <el-input-number v-model="addForm.sjB" size="small" :min="1" controls-position="right" style="width: 80px;" />
@@ -559,7 +557,7 @@
           <!-- 缓存盘 -->
           <el-row :gutter="10">
             <el-col :span="24">
-              <el-form-item label="缓存盘" prop="num">
+              <el-form-item label="缓存盘" prop="hcA">
                 <el-input-number v-model="addForm.hcA" size="small" :min="1" controls-position="right" style="width: 80px;" />
                 <span class="textMargin" style="font-size: 20px;">*</span>
                 <el-input-number v-model="addForm.hcB" size="small" :min="1" controls-position="right" style="width: 80px;" />
@@ -598,7 +596,7 @@
           <!-- GPU、raid卡 -->
           <el-row :gutter="10">
             <el-col :span="14">
-              <el-form-item label="GPU" prop="num">
+              <el-form-item label="GPU" prop="gpuVal">
                 <el-input-number v-model="addForm.gpuVal" size="small" :min="1" controls-position="right" style="width: 80px;" />
                 <span class="textMargin">*</span>
                 <el-input
@@ -609,7 +607,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="10">
-              <el-form-item label="raid卡" prop="num">
+              <el-form-item label="raid卡" prop="raidCard">
                 <el-input-number v-model="addForm.raidCard" size="small" :min="1" controls-position="right" style="width: 80px;" />
                 <span class="textMargin"> * raid卡</span>
               </el-form-item>
@@ -711,7 +709,7 @@
           </div>
           <el-row :gutter="10">
             <el-col :span="8">
-              <el-form-item label="设备标牌功率" prop="gl" label-width="100px">
+              <el-form-item label="设备标牌功率" prop="gl" label-width="108px">
                 <el-input-number v-model="addForm.gl" size="small" :min="1" label="请输入设备数量" controls-position="right" style="width:100%;" />
               </el-form-item>
             </el-col>
@@ -760,19 +758,19 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="单台高度" prop="role">
+              <el-form-item label="单台高度" prop="gd">
                 <el-input-number v-model="addForm.gd" size="small" :min="1" controls-position="right" style="width:100%" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="重量" prop="type">
+              <el-form-item label="重量" prop="zl">
                 <el-input-number v-model="addForm.zl" :step="0.1" size="small" :min="1" controls-position="right" style="width:100%" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="10">
             <el-col :span="24">
-              <el-form-item label="设备尺寸（高*宽*深）(mm)" prop="cc" label-width="190px">
+              <el-form-item label="设备尺寸（高*宽*深）(mm)" prop="cc" label-width="195px">
                 <el-input-number v-model="addForm.k" :step="10" size="small" :min="10" controls-position="right" style="width: 100px;" />
                 <span class="textMargin">*</span>
                 <el-input-number v-model="addForm.g" :step="10" size="small" :min="10" controls-position="right" style="width: 100px;" />
@@ -783,7 +781,7 @@
           </el-row>
           <el-row :gutter="10">
             <el-col :span="24">
-              <el-form-item label="备注" prop="cc">
+              <el-form-item label="备注" prop="bz">
                 <el-input v-model="addForm.bz" type="textarea" :rows="4" />
               </el-form-item>
             </el-col>
@@ -959,7 +957,67 @@ export default {
         }
       ],
       // 总条数
-      pageTotal: 0
+      pageTotal: 0,
+      // 校验
+      rules: {
+        cp: [
+          { required: true, message: '请选择设备角色', trigger: 'change' }
+        ],
+        role: [
+          { required: true, message: '请选择设备预上架机柜编号', trigger: 'change' }
+        ],
+        type: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        name: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        num: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        cs: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        xh: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        cpuType: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        cpuLu: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        ncA: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        xtA: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        raidCard: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        gl: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        mk: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        dyType: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        cz: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        gd: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        zl: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ],
+        cc: [
+          { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
+        ]
+      }
     }
   },
   computed: {},

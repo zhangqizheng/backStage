@@ -2,8 +2,8 @@
   <div class="machineBox">
     <div class="handleList">
       <el-button type="primary" plain size="mini" @click="drawerFlag = true">设备上架</el-button>
-      <el-button type="primary" plain size="mini">下载上架图</el-button>
-      <el-button type="primary" plain size="mini">设计定稿</el-button>
+      <!-- <el-button type="primary" plain size="mini">下载上架图</el-button> -->
+      <!-- <el-button type="primary" plain size="mini">设计定稿</el-button> -->
     </div>
     <!--使用draggable组件-->
     <div ref="machineList" class="machineList" @mousewheel.prevent="rollImg">
@@ -24,8 +24,8 @@
             :move="onMove"
             style="flex: 1;"
             handle=".mover"
-            @start.stop="onStart"
-            @end.stop="onEnd"
+            @start="onStart"
+            @end="onEnd"
           >
             <transition-group style="min-height:120px; display: block;" :class="'group-' + index">
               <div
@@ -161,6 +161,7 @@
 import draggable from 'vuedraggable'
 import { machineData } from './api/data'
 export default {
+  name: 'Putaway',
   // 注册draggable组件
   components: {
     draggable
@@ -260,13 +261,14 @@ export default {
       ],
       // 机柜数据
       machineData: machineData,
+      dragObj: {},
       // 拖出对象
       fromObj: {},
       // 拖入对象
       toObj: {},
       // 拖出下标
       fromIndex: 0,
-      // 拖入对象
+      // 拖入下标
       toIndex: 0,
       // 空数组之在的样式，设置了这个样式才能拖入
       style: 'min-height:120px;display: block;',
@@ -306,17 +308,17 @@ export default {
       document.onmouseup = null
       console.log('start', e)
       this.drag = true
-      this.fromIndex = e.from.className.split('-')[1]
+      this.dragObj.fromIndex = e.from.className.split('-')[1]
     },
     // 开始移动事件
     onMove(e) {
       // console.log('move', e)
       // 原来数据
-      this.fromObj = e.draggedContext
+      this.dragObj.fromObj = e.draggedContext
       // 要放置数据
-      this.toObj = e.relatedContext
+      this.dragObj.toObj = e.relatedContext
       // 要放置的机柜下标
-      this.toIndex = e.to.className.split('-')[1]
+      this.dragObj.toIndex = e.to.className.split('-')[1]
       // 要放置数组下标
       const toObjIndex = e.relatedContext.index
       // 要放置数组
@@ -326,57 +328,42 @@ export default {
       // 要放置数组下一条数据
       const nextObj = toList[toObjIndex + 1]
       console.log(lastObj, nextObj)
-      if (lastObj.name === '' && nextObj.name === '') {
-        console.log('可以放置')
-      } else {
-        console.log('不可以放置')
-      }
-      // for (let i = 0; i < this.fromObj.element.u; i++) {
-      // let upObj = toList[toObjIndex - (i + 1)]
-      // console.log(upObj)
-      // let downObj = toList[toObIndex + (i + 1)]
-      // if(upObj.name === ''){
-      //   console.log('可以放置')
-      // }else{
-      //   console.log('不可以放置')
-      // }
-      // }
     },
     // 拖拽结束事件
     onEnd(e) {
       // console.log('end', e)
       this.drag = false
-      if (this.fromIndex !== this.toIndex) {
+      if (this.dragObj.fromIndex !== this.dragObj.toIndex) {
         // 原机柜增加空
-        if (this.fromObj.element.u > 0) {
-          console.log(this.fromObj.element.u)
-          for (let i = 0; i < this.fromObj.element.u; i++) {
+        if (this.dragObj.fromObj.element.u > 0) {
+          console.log(this.dragObj.fromObj.element.u)
+          for (let i = 0; i < this.dragObj.fromObj.element.u; i++) {
             // 拖出数组增加空层
-            const obj = { ...this.fromObj.element, name: '', u: 0 }
-            this.machineData[this.fromIndex].list.splice(this.fromObj.index, 0, obj)
+            const obj = { ...this.dragObj.fromObj.element, name: '', u: 0 }
+            this.machineData[this.dragObj.fromIndex].list.splice(this.dragObj.fromObj.index, 0, obj)
             // 拖入数组删除空层
-            this.machineData[this.toIndex].list.splice(this.toObj.index + 1, 1)
-            this.$set(this.machineData[this.toIndex].list[this.toObj.index], 'id', Math.abs(this.toObj.index - 43).toString())
+            this.machineData[this.dragObj.toIndex].list.splice(this.dragObj.toObj.index + 1, 1)
+            this.$set(this.machineData[this.dragObj.toIndex].list[this.dragObj.toObj.index], 'id', Math.abs(this.dragObj.toObj.index - 43).toString())
           }
 
-          // const obj = { ...this.fromObj.element, name: '', u: 0 }
-          // this.machineData[this.fromIndex].list.splice(this.fromObj.index, 0, obj)
+          // const obj = { ...this.dragObj.fromObj.element, name: '', u: 0 }
+          // this.machineData[this.dragObj.fromIndex].list.splice(this.dragObj.fromObj.index, 0, obj)
 
-          console.log('拖出下标', this.fromObj.index)
-          console.log('拖入下标', this.toObj.index)
-          console.log('拖出数据', this.machineData[this.fromIndex].list[this.fromObj.index])
-          console.log('拖入数据', this.machineData[this.toIndex].list[this.toObj.index])
+          console.log('拖出下标', this.dragObj.fromObj.index)
+          console.log('拖入下标', this.dragObj.toObj.index)
+          console.log('拖出数据', this.machineData[this.dragObj.fromIndex].list[this.fromObj.index])
+          console.log('拖入数据', this.machineData[this.dragObj.toIndex].list[this.dragObj.toObj.index])
         }
       }
     },
     // 拖拽
     changeLoction() {
-      var box = document.querySelector('.machineBox')
+      var box = document.querySelector('.machineList')
       // 鼠标按下
       box.onmousedown = (e) => {
         // 鼠标相对于盒子的位置
-        var offsetX = e.clientX - box.offsetLeft + 15
-        var offsetY = e.clientY - box.offsetTop + 124
+        var offsetX = e.clientX - box.offsetLeft
+        var offsetY = e.clientY - box.offsetTop
         // 鼠标移动
         document.onmousemove = (e) => {
           box.style.left = e.clientX - offsetX + 'px'
@@ -444,7 +431,7 @@ export default {
 <style lang='scss' scoped>
 .machineBox {
   width: 100%;
-  height: calc(100vh - 150px);
+  height: calc(100vh - 120px);
   // padding-bottom: 20px;
   box-sizing: border-box;
   position: relative;
@@ -453,15 +440,16 @@ export default {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    position: fixed;
-    top: 100px;
+    position: absolute;
+    top: 0px;
     right: 10px;
     z-index: 9;
   }
   .machineList {
     width: 100%;
     display: flex;
-    margin-top: 40px;
+    position: absolute;
+    top: 40px;
     .machineName{
       width: 100%;
       display: flex;

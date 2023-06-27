@@ -36,17 +36,17 @@ const jypx = {
 
     },
     {
-      path: '/role/index',
-      component: () => import('@/views/business/modules/deignManage/role/index'),
-      name: '/role/index',
-      meta: { title: '角色关系管理', icon: 'menuSon' }
+      path: '/putaway/index',
+      component: () => import('@/views/business/modules/deignManage/putaway/index'),
+      name: 'putaway',
+      meta: { title: '上架管理', icon: 'menuSon' }
 
     },
     {
-      path: '/putaway/index',
-      component: () => import('@/views/business/modules/deignManage/putaway/index'),
-      name: '/putaway/index',
-      meta: { title: '上架管理', icon: 'menuSon' }
+      path: '/device/index',
+      component: () => import('@/views/business/modules/deignManage/device/index'),
+      name: '/device/index',
+      meta: { title: '设备库管理', icon: 'menuSon' }
 
     },
     {
@@ -68,6 +68,13 @@ const jypx = {
       component: () => import('@/views/business/modules/deignManage/port/index'),
       name: '/port/index',
       meta: { title: '端口管理', icon: 'menuSon' }
+
+    },
+    {
+      path: '/role/index',
+      component: () => import('@/views/business/modules/deignManage/role/index'),
+      name: '/role/index',
+      meta: { title: '角色关系管理', icon: 'menuSon' }
 
     }
   ]
