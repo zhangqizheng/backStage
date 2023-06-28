@@ -38,7 +38,7 @@ const jypx = {
     {
       path: '/putaway/index',
       component: () => import('@/views/business/modules/deignManage/putaway/index'),
-      name: 'putaway',
+      name: 'Putaway',
       meta: { title: '上架管理', icon: 'menuSon' }
 
     },

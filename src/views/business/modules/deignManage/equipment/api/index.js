@@ -3,11 +3,11 @@ import request from '@/utils/request'
 import baseURL from '@/utils/baseUrl'
 
 // 机构列表
-export function getOrgList(data) {
+export function getListData(data) {
   return request({
-    method: 'post',
-    url: baseURL.jypx + 'insitute/audit/query',
-    data: data
+    method: 'get',
+    url: baseURL.jypx + '/device/list',
+    params: data
   })
 }
 

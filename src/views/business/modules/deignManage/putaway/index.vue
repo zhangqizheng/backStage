@@ -2,8 +2,8 @@
   <div class="machineBox">
     <div class="handleList">
       <el-button type="primary" plain size="mini" @click="drawerFlag = true">设备上架</el-button>
-      <!-- <el-button type="primary" plain size="mini">下载上架图</el-button> -->
-      <!-- <el-button type="primary" plain size="mini">设计定稿</el-button> -->
+      <el-button type="primary" plain size="mini">下载上架图</el-button>
+      <el-button type="primary" plain size="mini">设计定稿</el-button>
     </div>
     <!--使用draggable组件-->
     <div ref="machineList" class="machineList" @mousewheel.prevent="rollImg">
@@ -140,6 +140,21 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-row :gutter="20">
+            <el-col :span="24">
+              <div class="ruleBox">
+                <div class="headTitle noMargin">
+                  <span class="line" />
+                  <span class="title">默认上架规则</span>
+                </div>
+                <div class="ruleList">
+                  <div v-for="(item,index) in ruleList" :key="index" class="ruleItem">
+                    {{ item }}
+                  </div>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
         </el-form>
       </div>
       <div class="putawayBox">
@@ -170,6 +185,16 @@ export default {
     return {
       // 上架设备抽屉开关
       drawerFlag: false,
+      ruleList: [
+        '1、单机柜布放设备占用U位数不能超过该机柜可用U位数;',
+        '2、单机柜布放设备占用插座数量不能超过该机柜可用插座数量;',
+        '3、单机柜布放设备占用功耗和不能超过该机柜可用功耗;',
+        '4、单次上架设备数量不能超过所选角色可上架设备数量;',
+        '5、若所选设备为服务器类型, 则由机柜底端最小可用U位数开始向上布放设备;',
+        '6、若所选设备为服务器类型, 则设备布放时默认在上方预留1U间隙;',
+        '7、若所选设备为交换机类型, 则由机柜上端最大可用U位数开始向下布放设备;',
+        '8、若所选设备为交换机类型, 则设备布放时默认在下方预留2U间隙 (用于理线架) ;'
+      ],
       // 上架设备数据
       addForm: {
         // 设备总数量
@@ -576,6 +601,16 @@ export default {
       .allNum{
         margin-right: 20px;
         margin-left: 20px;
+      }
+    }
+    .ruleBox{
+      width: 100%;
+      .ruleList{
+        margin-top: 10px;
+        >div{
+          padding: 6px 0 6px 20px;
+          color: #666;
+        }
       }
     }
   }

@@ -2,17 +2,9 @@
   <div>
     <div class="g-box">
       <div class="g-filter">
-        <el-form ref="formInline" :model="pageParam" label-width="120px">
+        <el-form ref="formInline" :model="pageParam" label-width="80px">
           <el-row :gutter="10">
-            <el-col :span="8">
-              <el-form-item label="设备名称" prop="name">
-                <el-input
-                  v-model="pageParam.name"
-                  placeholder="请输入设备名称"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="设备类型" prop="type">
                 <el-select
                   v-model="pageParam.type"
@@ -27,7 +19,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="设备角色" prop="role">
                 <el-select
                   v-model="pageParam.role"
@@ -42,9 +34,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-          </el-row>
-          <el-row :gutter="10">
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="厂商" prop="firm">
                 <el-select
                   v-model="pageParam.firm"
@@ -59,7 +49,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6" :offset="10">
+            <el-col :span="6">
               <div style="float: right">
                 <el-button
                   type="primary"
@@ -116,105 +106,115 @@
             align="center"
           />
           <el-table-column
-            label="设备名称"
-            prop="a"
-            width="200"
+            label="产品"
+            prop="product"
+            width="120"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
             label="设备类型"
-            prop="b"
-            width="120"
-            show-overflow-tooltip
-            align="center"
-          >
-            <template slot-scope="scope">
-              <span>{{ scope.row.b === 1 ? '服务器' : '' }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="产品"
-            prop="c"
+            prop="deviceClassification.name"
             width="120"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
             label="设备角色"
-            prop="d"
+            prop="deviceRole.name"
             width="180"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
             label="数量"
-            prop="e"
+            prop="count"
             width="80"
             align="center"
           />
           <el-table-column
             label="厂商"
-            prop="f"
+            prop="manufacture"
             width="120"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
             label="型号"
-            prop="g"
+            prop="model"
             width="160"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
             label="CPU类型"
-            prop="h"
+            prop="deviceSrv.cpuType"
             width="160"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
             label="CPU配置"
-            prop="i"
             width="160"
             show-overflow-tooltip
             align="center"
-          />
+          >
+            <template v-if="scope.row.deviceSrv" slot-scope="scope">
+              {{ scope.row.deviceSrv.cpuCount }}路{{ scope.row.deviceSrv.cpuCore }}核
+            </template>
+          </el-table-column>
           <el-table-column
             label="内存配置"
-            prop="j"
             width="160"
             show-overflow-tooltip
             align="center"
-          />
+          >
+            <template v-if="scope.row.deviceSrv" slot-scope="scope">
+              {{ scope.row.deviceSrv.memCount }}*{{ scope.row.deviceSrv.memCap }}
+            </template>
+          </el-table-column>
           <el-table-column
             label="系统盘"
-            prop="k"
             width="160"
             show-overflow-tooltip
             align="center"
-          />
+          >
+            <template v-if="scope.row.deviceSrv" slot-scope="scope">
+              {{ scope.row.deviceSrv.diskCountSys }}*{{ scope.row.deviceSrv.diskCapSys }}
+              {{ scope.row.deviceSrv.diskTypeSys }}
+            </template>
+          </el-table-column>
           <el-table-column
             label="数据盘"
-            prop="l"
             width="160"
             show-overflow-tooltip
             align="center"
-          />
+          >
+            <template v-if="scope.row.deviceSrv" slot-scope="scope">
+              {{ scope.row.deviceSrv.diskCountData }}*{{ scope.row.deviceSrv.diskCapData }}
+              {{ scope.row.deviceSrv.diskTypeData }}
+            </template>
+          </el-table-column>
           <el-table-column
             label="缓存盘"
-            prop="m"
             width="160"
             show-overflow-tooltip
             align="center"
-          />
+          >
+            <template v-if="scope.row.deviceSrv" slot-scope="scope">
+              {{ scope.row.deviceSrv.diskCountCache }}*{{ scope.row.deviceSrv.diskCapCache }}
+              {{ scope.row.deviceSrv.diskTypeCache }}
+            </template>
+          </el-table-column>
           <el-table-column
             label="raid卡"
-            prop="n"
             width="80"
             align="center"
-          />
+          >
+            <template v-if="scope.row.deviceSrv" slot-scope="scope">
+              {{ scope.row.deviceSrv.raidCount }}*Raid卡
+            </template>
+          </el-table-column>
           <el-table-column
             label="板卡信息"
             prop="n"
@@ -224,60 +224,57 @@
           />
           <el-table-column
             label="设备标牌功率"
-            prop="o"
+            prop="powerLable"
             width="100"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
-            label="是否现网在用设备"
-            prop="p"
-            width="80"
-            align="center"
-          />
-          <el-table-column
             label="电源模块"
-            prop="q"
+            prop="powerCount"
             width="120"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
             label="电源类型"
-            prop="e"
+            prop="powerType"
             width="120"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
             label="插座要求"
-            prop="s"
+            prop="plugCount"
             width="120"
             show-overflow-tooltip
             align="center"
           />
           <el-table-column
             label="设备尺寸(高x宽x深)(mm)"
-            prop="t"
             width="160"
             show-overflow-tooltip
             align="center"
-          />
+          >
+            <template slot-scope="scope">
+              {{ scope.row.height }}x{{ scope.row.width }}x{{ scope.row.length }}
+            </template>
+          </el-table-column>
           <el-table-column
             label="单台高度(U)"
-            prop="u"
+            prop="ucount"
             width="80"
             align="center"
           />
           <el-table-column
             label="重量(kg)"
-            prop="v"
+            prop="weight"
             width="80"
             align="center"
           />
           <el-table-column
-            label="是否定制化"
-            prop="w"
+            label="备注"
+            prop="remark"
             width="80"
             align="center"
           />
@@ -331,7 +328,7 @@
               <el-form-item label="产品" prop="cp">
                 <el-input
                   v-model="addForm.cp"
-                  placeholder="请输入设备名称"
+                  placeholder="请输入产品"
                 />
               </el-form-item>
             </el-col>
@@ -367,14 +364,6 @@
             </el-col>
           </el-row>
           <el-row :gutter="10">
-            <el-col :span="8">
-              <el-form-item label="设备名称" prop="name">
-                <el-input
-                  v-model="addForm.name"
-                  placeholder="请输入设备名称"
-                />
-              </el-form-item>
-            </el-col>
             <el-col :span="8">
               <el-form-item label="设备数量" prop="num">
                 <el-input-number v-model="addForm.num" size="small" :min="1" label="请输入设备数量" controls-position="right" style="width:100%;" />
@@ -602,7 +591,7 @@
                 <el-input
                   v-model="addForm.gpuText"
                   style="width: 230px;"
-                  placeholder="请输入设备名称"
+                  placeholder=""
                 />
               </el-form-item>
             </el-col>
@@ -804,6 +793,7 @@
 </template>
 
 <script>
+import { getListData } from './api/index'
 export default {
   data() {
     return {
@@ -859,8 +849,8 @@ export default {
       }],
       // 查询条件
       pageParam: {
-        page: 0,
-        pageSize: 10
+        pageNum: 1,
+        pageSize: 5
       },
       // 新增数据
       addForm: {
@@ -879,83 +869,7 @@ export default {
         ]
       },
       // 列表数据
-      tableData: [
-        {
-          a: '4U缓存服务器',
-          b: 1,
-          c: 'CT3',
-          d: '缓存服务器',
-          e: '1',
-          f: 'H3C',
-          g: 'S6805-54HF',
-          h: 'X86',
-          i: '2C64核',
-          j: '16*32G',
-          k: '2*1.8TSAS',
-          l: '24*16TSATA',
-          m: '4*32TPCIE NVMESSD',
-          n: '1',
-          o: '2XIntel 8378A(21Cores,3.0GHz)CPU',
-          p: '646W',
-          q: '2',
-          r: '交流',
-          s: '2*10A',
-          t: '44(1RU)x440x400',
-          u: '1',
-          v: '10',
-          w: '否'
-        },
-        {
-          a: '4U缓存服务器',
-          b: 1,
-          c: 'CT3',
-          d: '缓存服务器',
-          e: '1',
-          f: 'H3C',
-          g: 'S6805-54HF',
-          h: 'X86',
-          i: '2C64核',
-          j: '16*32G',
-          k: '2*1.8TSAS',
-          l: '24*16TSATA',
-          m: '4*32TPCIE NVMESSD',
-          n: '1',
-          o: '2XIntel 8378A(21Cores,3.0GHz)CPU',
-          p: '646W',
-          q: '2',
-          r: '交流',
-          s: '2*10A',
-          t: '44(1RU)x440x400',
-          u: '1',
-          v: '10',
-          w: '否'
-        },
-        {
-          a: '4U缓存服务器',
-          b: 1,
-          c: 'CT3',
-          d: '缓存服务器',
-          e: '1',
-          f: 'H3C',
-          g: 'S6805-54HF',
-          h: 'X86',
-          i: '2C64核',
-          j: '16*32G',
-          k: '2*1.8TSAS',
-          l: '24*16TSATA',
-          m: '4*32TPCIE NVMESSD',
-          n: '1',
-          o: '2XIntel 8378A(21Cores,3.0GHz)CPU',
-          p: '646W',
-          q: '2',
-          r: '交流',
-          s: '2*10A',
-          t: '44(1RU)x440x400',
-          u: '1',
-          v: '10',
-          w: '否'
-        }
-      ],
+      tableData: [],
       // 总条数
       pageTotal: 0,
       // 校验
@@ -1023,6 +937,7 @@ export default {
   computed: {},
   watch: {},
   created() {
+    this.getListData()
   },
   mounted() {},
   methods: {
@@ -1030,6 +945,15 @@ export default {
     addDevice() {
       console.log(this.addForm)
       // this.drawerFlag = false;
+    },
+    getListData() {
+      getListData(this.pageParam).then(res => {
+        if (res.status === 200) {
+          this.tableData = res.body.data
+          this.pageTotal = res.body.totalElements
+          console.log(res, this.tableData)
+        }
+      })
     },
     // 打开抽屉
     openDrawer() {
