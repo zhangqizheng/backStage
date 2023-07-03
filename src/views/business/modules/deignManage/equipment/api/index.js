@@ -10,7 +10,6 @@ export function getListData(data) {
     params: data
   })
 }
-
 // 新增设备
 export function addDevice(data) {
   console.log('data add:', data)
