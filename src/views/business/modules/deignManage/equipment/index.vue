@@ -898,7 +898,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="电源模块" prop="powerCount">
-                <el-select v-model="addForm.powerCount" placeholder="">
+                <el-select
+                  v-model="addForm.powerCount"
+                  placeholder=""
+                  filterable
+                  @change="$forceUpdate()"
+                >
                   <el-option key="2" label="2" value="2" />
                   <el-option key="4" label="4" value="4" />
                   <el-option key="6" label="6" value="6" />
@@ -908,7 +913,12 @@
             </el-col>
             <el-col :span="8">
               <el-form-item label="电源类型" prop="powerType">
-                <el-select v-model="addForm.powerType" placeholder="">
+                <el-select
+                  v-model="addForm.powerType"
+                  placeholder=""
+                  filterable
+                  @change="$forceUpdate()"
+                >
                   <el-option
                     v-for="item in dict.powerType"
                     :key="item.id"
@@ -936,6 +946,8 @@
                   v-model="addForm.plugCurrent"
                   style="width: 80px"
                   placeholder=""
+                  filterable
+                  @change="$forceUpdate()"
                 >
                   <el-option key="1" label="10A" value="10A" />
                   <el-option key="2" label="16A" value="16A" />
@@ -1004,7 +1016,12 @@
           <el-row :gutter="10">
             <el-col :span="24">
               <el-form-item label="备注" prop="remark">
-                <el-input v-model="addForm.remark" type="textarea" :rows="4" />
+                <el-input
+                  v-model="addForm.remark"
+                  type="textarea"
+                  :rows="4"
+                  @input="$forceUpdate()"
+                />
               </el-form-item>
             </el-col>
           </el-row>
@@ -1090,7 +1107,7 @@ export default {
         height: [{ required: true, message: '请填写尺寸', trigger: 'change' }],
         cbcList: [{ required: true, message: '请填写板卡信息', trigger: 'change' }]
       },
-      obj: {
+      deviceSrvRules: {
         'deviceSrv[cpuType]': [
           { required: true, message: '请选择CPU类型', trigger: 'change' }
         ],
@@ -1128,7 +1145,7 @@ export default {
   computed: {
     newRules() {
       if (this.addForm.dcfId === 1) {
-        return { ...this.rules, ...this.obj }
+        return Object.assign(this.rules, this.deviceSrvRules)
       } else {
         return this.rules
       }
@@ -1160,7 +1177,7 @@ export default {
           const params = { ...this.addForm }
           params.cbcList = arr
 
-          // 处理CPU单位问题
+          // 处理GB，TB单位问题
           this.getNewDeviceSrvData()
           addDevice(params).then((res) => {
             console.log(res)
@@ -1420,6 +1437,10 @@ export default {
   .el-input--small .el-input__inner {
     height: 36px;
     line-height: 36px;
+  }
+
+  .el-table .cell.el-tooltip {
+    white-space: normal;
   }
 }
 </style>
