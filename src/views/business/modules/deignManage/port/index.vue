@@ -1,170 +1,156 @@
 <template>
   <div>
-    <div v-if="!showOrgDialog && !showFieldDialog" class="g-box">
-      <div class="g-filter">
-        <el-form ref="formInline" :model="pageParam" label-width="120px">
-          <el-row :gutter="20">
+    <div class="g-box">
+      <!-- <div class="g-filter">
+        <el-form ref="formInline" :model="pageParam" label-width="80px">
+          <el-row :gutter="10">
             <el-col :span="6">
-              <el-form-item label="机构名称" prop="orgName">
-                <el-input
-                  v-model="pageParam.orgName"
-                  placeholder="请输入机构名称"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="7">
-              <el-form-item
-                label="统一机构代码/社会信用代码"
-                prop="uscc"
-                label-width="200px"
-              >
-                <el-input
-                  v-model="pageParam.uscc"
-                  placeholder="请输入统一机构代码"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="申请状态" prop="itype">
-                <el-select v-model="pageParam.itype" clearable placeholder="请选择申请状态">
-                  <el-option key="1" label="解约" :value="1" />
-                  <el-option key="2" label="续约" :value="2" />
+              <el-form-item label="本端设备角色" prop="firm">
+                <el-select
+                  v-model="pageParam.firm"
+                  placeholder="请选择本端设备角色"
+                >
+                  <el-option
+                    v-for="item in firmOption"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="6">
+              <el-form-item label="对端设备角色" prop="firm">
+                <el-select
+                  v-model="pageParam.firm"
+                  placeholder="请选择对端设备角色"
+                >
+                  <el-option
+                    v-for="item in firmOption"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="链路类型" prop="firm">
+                <el-select
+                  v-model="pageParam.firm"
+                  placeholder="请选择链路类型"
+                >
+                  <el-option
+                    v-for="item in firmOption"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6" :offset="10">
               <div style="float: right">
                 <el-button
                   type="primary"
-                  size="small"
                   icon="el-icon-search"
-                  :loading="loading"
-                  @click="queryListByCriteria"
+                  size="small"
                 >查询</el-button>
                 <el-button
                   type="info"
-                  size="small"
                   icon="el-icon-refresh"
-                  @click="resetQuery"
+                  size="small"
                 >重置</el-button>
               </div>
             </el-col>
           </el-row>
         </el-form>
-      </div>
-      <el-tabs v-model="tabVal">
-        <el-tab-pane label="承训机构" name="1" />
-        <el-tab-pane label="就业创业园地" name="2" />
-      </el-tabs>
-      <!-- 机构 -->
-      <div v-show="tabVal === '1'" class="contentBox">
-        <el-table
-          ref="showTable"
-          :data="orgData"
-          stripe
-          border
-          style="width: 100%;"
-          height="calc(100vh - 410px)"
-        >
-          <el-table-column
-            type="index"
-            label="序号"
-            width="50"
-            align="center"
-          />
-          <el-table-column
-            label="机构名称"
-            prop="orgName"
-            width="240"
-            show-overflow-tooltip
-            align="center"
-          />
-          <el-table-column
-            label="统一机构代码/社会信用代码"
-            prop="uscc"
-            width="200"
-            align="center"
-          />
-          <el-table-column
-            label="单位性质"
-            prop="unitNature"
-            width="100"
-            align="center"
-          >
-            <template slot-scope="scope">
-              {{ dictKeyMap.UNIT_PROPERTIES ? dictKeyMap.UNIT_PROPERTIES[scope.row.unitNature] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="培训类型"
-            prop="trainType"
-            show-overflow-tooltip
-            align="center"
-          >
-            <template slot-scope="scope">
-              {{ dictKeyMap.YXPXLX ? dictKeyMap.YXPXLX[scope.row.trainType] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="独立法人"
-            prop="legalName"
-            width="80"
-            align="center"
-          />
-          <el-table-column
-            label="机构级别"
-            prop="authLevel"
-            width="90"
-            align="center"
-          >
-            <template slot-scope="scope">
-              {{ dictKeyMap.ORG_LEVEL ? dictKeyMap.ORG_LEVEL[scope.row.authLevel] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="机构账号"
-            prop="orgId"
-            show-overflow-tooltip
-            width="110"
-            align="center"
-          />
-          <el-table-column
-            label="到期时间"
-            prop="expTime"
-            show-overflow-tooltip
-            width="110"
-            align="center"
-          />
-          <el-table-column
-            label="申请时间"
-            prop="auditTime"
-            show-overflow-tooltip
-            width="110"
-            align="center"
-          />
-          <el-table-column
-            label="申请状态"
-            prop="authLevel"
-            width="90"
-            align="center"
-          >
-            <template slot-scope="scope">
-              {{ scope.row.itype === 1 ? '解约' : '续约' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="60" align="center" fixed="right">
-            <template slot-scope="scope">
-              <el-button-group class="tab-button-group">
-                <el-link
-                  type="primary"
-                  @click="openOrgDialog(scope.row)"
-                >审核</el-link>
-              </el-button-group>
-            </template>
-          </el-table-column>
-        </el-table>
+      </div> -->
+      <!-- <div class="contentBox">
+        <div class="handleBox">
+          <div class="title">设备清单</div>
+          <div class="btnList">
+            <el-button
+              type="primary"
+              size="small"
+              plain
+            >新增设备</el-button>
+            <el-button
+              size="small"
+              plain
+            >下载模板</el-button>
+            <el-button
+              size="small"
+              plain
+            >批量删除</el-button>
+          </div>
+        </div> -->
+      <el-table
+        ref="showTable"
+        :data="tableData"
+        stripe
+        border
+        style="width: 100%;"
+        height="calc(100vh - 120px)"
+      >
+        <el-table-column
+          type="index"
+          label="序号"
+          width="50"
+          align="center"
+        />
+        <el-table-column
+          label="板卡名称"
+          prop="f"
+          width="200"
+          show-overflow-tooltip
+          align="center"
+        />
+        <el-table-column
+          label="端口号"
+          prop="g"
+          width="100"
+          show-overflow-tooltip
+          align="center"
+        />
+        <el-table-column
+          label="端口类型"
+          prop="h"
+          width="220"
+          show-overflow-tooltip
+          align="center"
+        />
+        <el-table-column
+          label="对端设备"
+          prop="i"
+          width="160"
+          show-overflow-tooltip
+          align="center"
+        />
+        <el-table-column
+          label="对端位置"
+          prop="j"
+          width="100"
+          show-overflow-tooltip
+          align="center"
+        />
+        <el-table-column
+          label="对端端口"
+          prop="k"
+          width="160"
+          show-overflow-tooltip
+          align="center"
+        />
+        <el-table-column
+          label="备注"
+          prop="l"
+          width="120"
+          show-overflow-tooltip
+          align="center"
+        />
+      </el-table>
 
-        <el-pagination
+      <!-- <el-pagination
           background
           class="g-pagination"
           layout="total, sizes, prev, pager, next"
@@ -175,276 +161,160 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
-      </div>
-      <!-- 园地 -->
-      <div v-show="tabVal === '2'" class="contentBox">
-        <el-table
-          ref="showTable"
-          :data="fieldData"
-          stripe
-          border
-          style="width: 100%;"
-          height="calc(100vh - 410px)"
-        >
-          <el-table-column
-            type="index"
-            label="序号"
-            width="50"
-            align="center"
-          />
-          <el-table-column
-            label="园地名称"
-            prop="gradenPlotName"
-            show-overflow-tooltip
-            align="center"
-          />
-          <el-table-column
-            label="园地统一社会信用代码"
-            prop="uscc"
-            width="200"
-            align="center"
-          />
-          <el-table-column
-            label="园地资产性质"
-            prop="assetsNature"
-            width="120"
-            align="center"
-          >
-            <template slot-scope="scope">
-              {{ dictKeyMap.UNIT_PROPERTIES ? dictKeyMap.UNIT_PROPERTIES[scope.row.assetsNature] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="园地运营方式"
-            prop="operateMode"
-            width="120"
-            show-overflow-tooltip
-            align="center"
-          >
-            <template slot-scope="scope">
-              {{ dictKeyMap.OPERATION_MODE ? dictKeyMap.OPERATION_MODE[scope.row.operateMode] : '' }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            label="园地负责人"
-            prop="gradenPlotFzr"
-            width="100"
-            align="center"
-          />
-          <el-table-column
-            label="运营负责人"
-            prop="operateFzr"
-            width="100"
-            align="center"
-          />
-          <el-table-column
-            label="联系电话"
-            prop="publicTel"
-            show-overflow-tooltip
-            width="110"
-            align="center"
-          />
-          <el-table-column
-            label="到期时间"
-            prop="expTime"
-            show-overflow-tooltip
-            width="110"
-            align="center"
-          />
-          <el-table-column
-            label="申请时间"
-            prop="auditTime"
-            show-overflow-tooltip
-            width="110"
-            align="center"
-          />
-          <el-table-column
-            label="申请状态"
-            prop="authLevel"
-            width="90"
-            align="center"
-          >
-            <template slot-scope="scope">
-              {{ scope.row.gtype === 1 ? '解约' : '续约' }}
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" width="60" align="center" fixed="right">
-            <template slot-scope="scope">
-              <el-button-group class="tab-button-group">
-                <el-link
-                  type="primary"
-                  @click="openFieldDialog(scope.row)"
-                >审核</el-link>
-              </el-button-group>
-            </template>
-          </el-table-column>
-        </el-table>
-
-        <el-pagination
-          background
-          class="g-pagination"
-          layout="total, sizes, prev, pager, next"
-          :total="pageFieldTotal"
-          :current-page="pageParamField.page + 1"
-          :page-size="pageParamField.pageSize"
-          :page-sizes="[5, 10, 20, 50, 100]"
-          @size-change="handleSizeChangeField"
-          @current-change="handleCurrentChangeField"
-        />
-      </div>
+      </div> -->
     </div>
-    <!-- 机构审核 -->
-    <orgForm
-      v-if="showOrgDialog"
-      :visible="showOrgDialog"
-      :rule-form="ruleForm"
-      @submitPopupData="submitPopupData"
-      @closeFindDialog="closeOrgDialog"
-    />
-
-    <!-- 园地审核 -->
-    <fieldForm
-      v-if="showFieldDialog"
-      :visible="showFieldDialog"
-      :rule-form="ruleForm"
-      @submitPopupData="submitPopupData"
-      @closeFindDialog="closeFieldDialog"
-    />
   </div>
 </template>
 
 <script>
-import { getListData, getFieldListData } from './api/index.js'
-import orgForm from './details/orgForm'
-import fieldForm from './details/fieldForm'
 export default {
-  components: { orgForm, fieldForm },
   data() {
     return {
-      tableItem: {},
-      drawerTitle: '', // 详情title
-      childVisible: false, // 详情状态
-      dialogTitle: '',
-      showOrgDialog: false, // 默认隐藏
-      showFieldDialog: false, // 默认隐藏
-      // 正在查询
-      loading: false,
-      // 按钮权限
+      // 抽屉开关
+      drawerFlag: false,
       // 查询条件
       pageParam: {
         page: 0,
         pageSize: 10
       },
-      pageParamField: {
-        page: 0,
-        pageSize: 10
-      },
-      pageTotal: 0,
-      pageFieldTotal: 0,
-      ruleForm: {},
-      // 查询结果
-      orgData: [],
-      // 查询结果
-      fieldData: [],
-      tabVal: '1'
+      // 列表数据
+      tableData: [
+        {
+          f: '48端口25GE光口',
+          g: '1~7',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-1~7',
+          j: 'C01',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '8~14',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '15~21',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '22~28',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '29~35',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '36~42',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '43~49',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '50~46',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '57~63',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '64~70',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '71~70',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '78~84',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        },
+        {
+          f: '48端口25GE光口',
+          g: '85~91',
+          h: '25G光模块,多模(850nm,100m,SR,MM,LC)',
+          i: '宿主机（6系）-8~14',
+          j: 'C02',
+          k: '25G网卡-1-1',
+          l: ''
+        }
+      ],
+      // 总条数
+      pageTotal: 0
     }
   },
   computed: {},
-  watch: {
-    // 这里监听dialogShow对象的变化
-    showOrgDialog: {
-      deep: true,
-      handler(val) {
-        if (val) {
-          this.showOrgDialog = val
-        }
-      }
-    },
-    showFieldDialog: {
-      deep: true,
-      handler(val) {
-        if (val) {
-          this.showFieldDialog = val
-        }
-      }
-    }
-  },
+  watch: {},
   created() {
-    this.$bus.$on('goBack', () => {
-      this.showFieldDialog = false
-      this.showOrgDialog = false
-    })
-    // this.queryList()
-    // this.queryListField()
   },
   mounted() {},
   methods: {
-    // 机构数据
-    queryList() {
-      // 机构数据
-      getListData(this.pageParam)
-        .then((res) => {
-          console.log(res, '测试接口')
-          if (res.status === 0) {
-            this.orgData = res.data.rows
-            this.pageTotal = res.data.totalCount
-          }
-        })
-        .catch(() => {
-          this.$message.error('服务器错误')
-        })
-        .finally(() => {
-          this.loading = false
-        })
+    // 新增设备
+    addDevice() {
+      console.log(this.addForm)
+      // this.drawerFlag = false;
     },
-    // 园地数据
-    queryListField() {
-      const params = {
-        gradenPlotName: this.pageParam.orgName ? this.pageParam.orgName : '',
-        uscc: this.pageParam.uscc ? this.pageParam.uscc : '',
-        gtype: this.pageParam.itype ? this.pageParam.itype : ''
-      }
-      this.pageParamField = { ...this.pageParam, ...params }
-      // 园地数据
-      getFieldListData(this.pageParamField)
-        .then((res) => {
-          console.log(res, '测试接口')
-          if (res.status === 0) {
-            this.fieldData = res.data.rows
-            this.pageFieldTotal = res.data.totalCount
-          }
-        })
-        .catch(() => {
-          this.$message.error('服务器错误')
-        })
-        .finally(() => {
-          this.loading = false
-        })
-    },
-    // 打开机构审批
-    openOrgDialog(row) {
-      this.dialogTitle = '机构申请审核'
-      this.showOrgDialog = true
-      this.ruleForm = JSON.parse(JSON.stringify(row))
-    },
-    // 打开园地审批
-    openFieldDialog(row) {
-      this.dialogTitle = '园地申请审核'
-      this.showFieldDialog = true
-      this.ruleForm = JSON.parse(JSON.stringify(row))
-    },
-    // 保存新增
-    submitPopupData() {
-      // 刷新列表接口
-      this.queryList()
-    },
-    // 关闭弹出层
-    closeOrgDialog() {
-      this.showOrgDialog = false
-    },
-    // 关闭弹出层
-    closeFieldDialog() {
-      this.showFieldDialog = false
+    // 打开抽屉
+    openDrawer() {
+      this.drawerFlag = true
     },
     // 每页数变化
     handleSizeChange(pageSize) {
@@ -456,45 +326,114 @@ export default {
     handleCurrentChange(currentPage) {
       this.pageParam.page = currentPage - 1
       this.queryList()
-    },
-    // 每页数变化
-    handleSizeChangeField(pageSize) {
-      this.pageParamField.page = 0
-      this.pageParamField.pageSize = pageSize
-      this.queryListField()
-    },
-    // 页码变化
-    handleCurrentChangeField(currentPage) {
-      this.pageParamField.page = currentPage - 1
-      this.queryListField()
-    },
-    // 详情打开
-    details() {
-      this.drawerTitle = '查看详情'
-      this.childVisible = true
-    },
-    // 重置查询
-    resetQuery() {
-      this.pageParam = {}
-      this.pageParam.page = 0
-      this.pageParam.pageSize = 10
-      if (this.tabVal === '1') {
-        this.queryList()
-      } else {
-        this.queryListField()
-      }
-    },
-    // 查询按钮
-    queryListByCriteria() {
-      this.pageParam.page = 0
-      if (this.tabVal === '1') {
-        this.queryList()
-      } else {
-        this.queryListField()
-      }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
+.handleBox{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  .title{
+    font-weight: 700;
+  }
+  .btnList{
+    display: flex;
+    align-items: center;
+  }
+}
+.addFormBox{
+  padding: 0 10px;
+  box-sizing: border-box;
+  .headTitle{
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #606266;
+    font-weight: 700;
+    margin-bottom: 20px;
+    .line{
+      width: 4px;
+      height: 16px;
+      background: #1890ff;
+      margin-right: 4px;
+    }
+  }
+  .addBk{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dfe6ec;
+    border-radius: 5px;
+    font-size: 12px;
+    padding: 10px 0;
+    cursor: pointer;
+    color: #606266;
+    i{
+      margin-right: 4px;
+    }
+  }
+  .textMargin{
+    margin: 0 10px;
+  }
+  ::v-deep{
+    .el-input-number.is-controls-right .el-input__inner{
+      padding-left: 0;
+      padding-right: 30px;
+    }
+    .el-form-item{
+      margin-bottom: 16px;
+    }
+    .indexBox{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .del{
+        color: #f00;
+        cursor: pointer;
+      }
+    }
+    .bkBtn{
+      width: 100%;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      .add{
+        color: #1890ff;
+        cursor: pointer;
+      }
+      .del{
+        color: #f00;
+        cursor: pointer;
+        margin-left: auto;
+      }
+    }
+    .bkBtn:last-child{
+      border-bottom: 0;
+    }
+    .marginStyle{
+      padding: 5px 0;
+    }
+  }
+}
+.handleList{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 20px;
+  box-sizing: border-box;
+}
+::v-deep{
+  .el-drawer.rtl{
+    overflow: auto;
+  }
+}
 </style>

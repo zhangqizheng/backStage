@@ -30,15 +30,14 @@
             </el-col>
           </el-row>
           <el-row :gutter="20">
-            <el-col :span="6">
+            <el-col :span="8">
               <el-form-item label="本期占用机架" prop="b">
                 <el-input v-model="pageParam.b" disabled />
               </el-form-item>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="8">
               <el-form-item
-                label="走线架/尾纤槽高度(单位: m)"
-                label-width="200px"
+                label="走线架(单位: m)"
                 prop="c"
               >
                 <el-input v-model="pageParam.c" :disabled="disabled" />
@@ -74,97 +73,96 @@
           <el-table-column label="机架位置" width="160" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
-                <el-input v-model="scope.row.zm" style="width: 50px" />
+                <el-input v-model="scope.row.rowNo" style="width: 50px" />
                 <span class="textMargin">-</span>
-                <el-input v-model="scope.row.sz" style="width: 50px" />
+                <el-input v-model="scope.row.columnNo" style="width: 50px" />
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.zm }}{{ scope.row.sz }}</div>
+              <div v-show="disabled" class="text">{{ scope.row.rowNo }}{{ scope.row.columnNo }}</div>
             </template>
           </el-table-column>
           <el-table-column
             label="机架尺寸(长*宽*高)单位: mm"
-            width="330"
+            width="380"
             align="center"
           >
             <template slot-scope="scope">
               <div v-show="!disabled">
                 <el-input-number
-                  v-model="scope.row.a"
+                  v-model="scope.row.height"
                   :step="10"
                   size="small"
                   :min="10"
                   controls-position="right"
-                  style="width: 80px"
+                  style="width: 100px"
                 />
                 <span class="textMargin">*</span>
                 <el-input-number
-                  v-model="scope.row.b"
+                  v-model="scope.row.width"
                   :step="10"
                   size="small"
                   :min="10"
                   controls-position="right"
-                  style="width: 80px"
+                  style="width: 100px"
                 />
                 <span class="textMargin">*</span>
                 <el-input-number
-                  v-model="scope.row.c"
+                  v-model="scope.row.length"
                   :step="10"
                   size="small"
                   :min="10"
                   controls-position="right"
-                  style="width: 80px"
+                  style="width: 100px"
                 />
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.a }}{{ scope.row.b }}{{ scope.row.c }}</div>
+              <div v-show="disabled" class="text">{{ scope.row.height }}{{ scope.row.width }}{{ scope.row.length }}</div>
             </template>
           </el-table-column>
           <el-table-column label="U数" width="110" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
                 <el-input-number
-                  v-model="scope.row.d"
+                  v-model="scope.row.udigit"
                   size="small"
                   :min="1"
                   controls-position="right"
                   style="width: 80px"
                 />
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.d }}</div>
+              <div v-show="disabled" class="text">{{ scope.row.udigit }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="单机柜功耗(KW)" width="130" align="center">
+          <el-table-column label="单机柜功耗(W)" width="130" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
                 <el-input-number
-                  v-model="scope.row.e"
-                  :precision="1"
+                  v-model="scope.row.power"
                   size="small"
                   :min="1"
                   controls-position="right"
                   style="width: 100px"
                 />
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.e }}</div>
+              <div v-show="disabled" class="text">{{ scope.row.power }}</div>
             </template>
           </el-table-column>
           <el-table-column label="电源类型" width="120" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
-                <el-select v-model="scope.row.f" placeholder="">
-                  <el-option key="1" label="国际交流" value="1" />
-                  <el-option key="2" label="国际直流" value="2" />
-                  <el-option key="3" label="欧标交流" value="3" />
-                  <el-option key="4" label="欧标直流" value="4" />
+                <el-select v-model="scope.row.powerType" placeholder="">
+                  <el-option key="1" label="国际交流" value="国际交流" />
+                  <el-option key="2" label="国际直流" value="国际直流" />
+                  <el-option key="3" label="欧标交流" value="欧标交流" />
+                  <el-option key="4" label="欧标直流" value="欧标直流" />
                 </el-select>
               </div>
-              <div v-show="disabled" class="text" />
+              <div v-show="disabled" class="text">{{ scope.row.powerType }}</div>
             </template>
           </el-table-column>
           <el-table-column label="插座类型(10A)" width="160" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
                 <el-input-number
-                  v-model="scope.row.g"
+                  v-model="scope.row.plug10"
                   size="small"
                   :min="1"
                   controls-position="right"
@@ -173,14 +171,14 @@
                 <span class="textMargin">*</span>
                 <span>10A</span>
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.g }} * 10A</div>
+              <div v-show="disabled" class="text">{{ scope.row.plug10 }} * 10A</div>
             </template>
           </el-table-column>
           <el-table-column label="插座类型(16A)" width="160" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
                 <el-input-number
-                  v-model="scope.row.h"
+                  v-model="scope.row.plug16"
                   size="small"
                   :min="1"
                   controls-position="right"
@@ -189,66 +187,65 @@
                 <span class="textMargin">*</span>
                 <span>16A</span>
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.g }} * 16A</div>
+              <div v-show="disabled" class="text">{{ scope.row.plug16 }} * 16A</div>
             </template>
           </el-table-column>
           <el-table-column label="机柜上端不可用U位" width="110" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
                 <el-input-number
-                  v-model="scope.row.i"
+                  v-model="scope.row.utopUseless"
                   size="small"
                   :min="1"
                   controls-position="right"
                   style="width: 80px"
                 />
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.i }}</div>
+              <div v-show="disabled" class="text">{{ scope.row.uTopUseless }}</div>
             </template>
           </el-table-column>
           <el-table-column label="机柜底端不可用U位" width="110" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
                 <el-input-number
-                  v-model="scope.row.j"
+                  v-model="scope.row.ubottomUseless"
                   size="small"
                   :min="1"
                   controls-position="right"
                   style="width: 80px"
                 />
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.j }}</div>
+              <div v-show="disabled" class="text">{{ scope.row.uBottomUseless }}</div>
             </template>
           </el-table-column>
           <el-table-column label="已占用U位" width="160" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
-                <el-input v-model="scope.row.k" size="small" />
+                <el-input v-model="scope.row.uUseless" size="small" />
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.k }}</div>
+              <div v-show="disabled" class="text">{{ scope.row.uUseless }}</div>
             </template>
           </el-table-column>
-          <el-table-column label="已占用功耗(KW)" width="130" align="center">
+          <el-table-column label="已占用功耗(W)" width="130" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
                 <el-input-number
-                  v-model="scope.row.l"
-                  :precision="1"
+                  v-model="scope.row.powerUsed"
                   size="small"
                   :min="1"
                   controls-position="right"
                   style="width: 100px"
                 />
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.l }}</div>
+              <div v-show="disabled" class="text">{{ scope.row.powerUsed }}</div>
             </template>
           </el-table-column>
           <el-table-column label="备注" width="160" align="center">
             <template slot-scope="scope">
               <div v-show="!disabled">
-                <el-input v-model="scope.row.m" size="small" />
+                <el-input v-model="scope.row.remark" size="small" />
               </div>
-              <div v-show="disabled" class="text">{{ scope.row.m }}</div>
+              <div v-show="disabled" class="text">{{ scope.row.remark }}</div>
             </template>
           </el-table-column>
           <el-table-column
@@ -266,24 +263,12 @@
                 |
                 <el-link
                   type="primary"
-                  @click="delListData(scope.$index)"
+                  @click="delListData(scope.$index, scope.row)"
                 >删除</el-link>
               </el-button-group>
             </template>
           </el-table-column>
         </el-table>
-
-        <!-- <el-pagination
-          background
-          class="g-pagination"
-          layout="total, sizes, prev, pager, next"
-          :total="pageTotal"
-          :current-page="pageParam.page + 1"
-          :page-size="pageParam.pageSize"
-          :page-sizes="[5, 10, 20, 50, 100]"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        /> -->
       </div>
     </div>
     <div class="moreData">
@@ -300,8 +285,8 @@
         >
           <el-row :gutter="20">
             <el-col :span="8">
-              <el-form-item label="列柜输出开关大小" prop="a">
-                <el-input v-model="formData.a" :disabled="disabled" />
+              <el-form-item label="列柜输出开关大小" prop="outSwitchSize">
+                <el-input v-model="formData.outSwitchSize" :disabled="disabled" />
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -313,29 +298,29 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="上级供电系统是否能够满足本期要求" prop="b">
+              <el-form-item label="上级供电系统是否能够满足本期要求" prop="upperLayerPower">
                 <el-radio
-                  v-model="formData.b"
-                  label="1"
+                  v-model="formData.upperLayerPower"
+                  :label="true"
                   :disabled="disabled"
                 >是</el-radio>
                 <el-radio
-                  v-model="formData.b"
-                  label="2"
+                  v-model="formData.upperLayerPower"
+                  :label="false"
                   :disabled="disabled"
                 >否</el-radio>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="机房制冷是否满足本期需求" prop="c">
+              <el-form-item label="机房制冷是否满足本期需求" prop="roomNeeded">
                 <el-radio
-                  v-model="formData.c"
-                  label="1"
+                  v-model="formData.roomNeeded"
+                  :label="true"
                   :disabled="disabled"
                 >是</el-radio>
                 <el-radio
-                  v-model="formData.c"
-                  label="2"
+                  v-model="formData.roomNeeded"
+                  :label="false"
                   :disabled="disabled"
                 >否</el-radio>
               </el-form-item>
@@ -343,16 +328,16 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="8">
-              <el-form-item label="机房出局ODF端口类型" prop="d">
-                <el-input v-model="formData.d" :disabled="disabled" />
+              <el-form-item label="机房出局ODF端口类型" prop="outOdfPorttype">
+                <el-input v-model="formData.outOdfPorttype" :disabled="disabled" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item
                 label="163网络接入设备所在位置及设备型号/端口型号"
-                prop="e"
+                prop="info163"
               >
-                <el-input v-model="formData.e" :disabled="disabled" />
+                <el-input v-model="formData.info163" :disabled="disabled" />
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -364,8 +349,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="本端设备与163网络接入设备走线路由" prop="f">
-                <el-input v-model="formData.f" :disabled="disabled" />
+              <el-form-item label="本端设备与163网络接入设备走线路由" prop="route163">
+                <el-input v-model="formData.route163" :disabled="disabled" />
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -381,9 +366,9 @@
             <el-col :span="8">
               <el-form-item
                 label="CN2网络接入设备所在位置及设备型号/端口型号"
-                prop="g"
+                prop="infoCn2"
               >
-                <el-input v-model="formData.g" :disabled="disabled" />
+                <el-input v-model="formData.infoCn2" :disabled="disabled" />
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -395,8 +380,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="本端设备与CN2网络接入设备走线路由" prop="h">
-                <el-input v-model="formData.h" :disabled="disabled" />
+              <el-form-item label="本端设备与CN2网络接入设备走线路由" prop="routeCn2">
+                <el-input v-model="formData.routeCn2" :disabled="disabled" />
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -408,28 +393,28 @@
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="机架送风" prop="i">
-                <el-input v-model="formData.i" :disabled="disabled" />
+              <el-form-item label="机架送风" prop="shelfAir">
+                <el-input v-model="formData.shelfAir" :disabled="disabled" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="8">
-              <el-form-item label="省内老bss系统的核心设备" prop="j">
-                <el-input v-model="formData.j" :disabled="disabled" />
+              <el-form-item label="省内老bss系统的核心设备" prop="oldbssDevice">
+                <el-input v-model="formData.oldbssDevice" :disabled="disabled" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="机房出入联系人(机房现场负责人)" prop="k">
-                <el-input v-model="formData.k" :disabled="disabled" />
+              <el-form-item label="机房出入联系人(机房现场负责人)" prop="a">
+                <el-input v-model="formData.a" :disabled="disabled" />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item label="备注" prop="l">
+              <el-form-item label="备注" prop="remark">
                 <el-input
-                  v-model="formData.l"
+                  v-model="formData.remark"
                   type="textarea"
                   :rows="4"
                   :disabled="disabled"
@@ -439,13 +424,13 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="8">
-              <el-form-item label="设计院查勘人员签名" prop="m">
-                <el-input v-model="formData.m" :disabled="disabled" />
+              <el-form-item label="设计院查勘人员签名" prop="b">
+                <el-input v-model="formData.b" :disabled="disabled" />
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="省公司接口人签名" prop="n">
-                <el-input v-model="formData.n" :disabled="disabled" />
+              <el-form-item label="省公司接口人签名" prop="c">
+                <el-input v-model="formData.c" :disabled="disabled" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -453,14 +438,14 @@
       </div>
     </div>
     <div class="handBtn">
-      <div v-show="!disabled">
-        <el-button @click="cancel()">取消</el-button>
-        <el-button type="primary" @click="save(1)">保存</el-button>
-      </div>
-      <div v-show="disabled">
-        <el-button type="primary" plain size="small" @click="save(2)">编辑勘察信息</el-button>
+      <div>
+        <!-- <el-button type="primary" plain size="small" @click="save(2)">编辑勘察信息</el-button> -->
         <el-button type="primary" plain size="small" @click="downTabel(2)">下载勘察信息</el-button>
         <el-button type="primary" plain size="small" @click="downChart(2)">下载柜面图</el-button>
+      </div>
+      <div>
+        <el-button @click="cancel()">取消</el-button>
+        <el-button type="primary" @click="save()">保存</el-button>
       </div>
 
     </div>
@@ -468,6 +453,7 @@
 </template>
 
 <script>
+import { getListData, delCabinet, addData, updateData } from './api'
 export default {
   data() {
     return {
@@ -477,10 +463,10 @@ export default {
       formData: {},
       // 查询条件
       pageParam: {
-        page: 0,
-        pageSize: 10,
-        name: '上海市杨高南路5678号上海电信信息园B7/上海电信信息园B7/B7-101机房',
-        b: 4
+        roomId: '1',
+        engineeringId: '1'
+        // name: '上海市杨高南路5678号上海电信信息园B7/上海电信信息园B7/B7-101机房',
+        // b: 4
       },
       pageTotal: 0,
       // 查询结果
@@ -490,15 +476,50 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.getListData()
+  },
   mounted() {},
   methods: {
+    getListData() {
+      getListData(this.pageParam).then(res => {
+        if (res.status === 200) {
+          this.formData = res.body ? res.body : {}
+          this.tableData = res.body ? res.body.cabs : [{}]
+          console.log(res, this.formData, this.tableData)
+        }
+      })
+    },
     // 保存/编辑
-    save(val) {
-      if (val === 1) {
-        this.disabled = true
+    save() {
+      const params = { ...this.formData, ...this.pageParam }
+      params.cabs = this.tableData
+      if (this.formData.sid) {
+        // 编辑
+        updateData(params).then(res => {
+          console.log(res)
+          if (res.status === 200) {
+            this.$message({
+              type: 'success',
+              message: '修改成功'
+            })
+          } else {
+            this.$message.error(res.data.exception_msg)
+          }
+        })
       } else {
-        this.disabled = false
+        // 新增
+        addData(params).then(res => {
+          console.log(res)
+          if (res.status === 200) {
+            this.$message({
+              type: 'success',
+              message: '新增成功'
+            })
+          } else {
+            this.$message.error(res.data.exception_msg)
+          }
+        })
       }
     },
     // 下载勘查信息
@@ -511,31 +532,33 @@ export default {
     queryList() {},
     // 新增列表
     addListData(item) {
-      if (item.sz) {
-        let num = Number(item.sz)
-        console.log(num++)
-        this.tableData.push({
-          zm: item.zm,
-          sz: num++
-        })
-      } else {
-        this.tableData.push({})
-      }
+      // if (item.columnNo) {
+      //   let num = Number(item.columnNo)
+      //   console.log(num++)
+      //   this.tableData.push({
+      //     rowNo: item.rowNo,
+      //     columnNo: num++
+      //   })
+      //   this.tableData.push(item)
+      // } else {
+      //   this.tableData.push(item)
+      // }
+      const obj = JSON.parse(JSON.stringify(item))
+      delete obj.id
+      this.tableData.push(obj)
+      console.log(this.tableData)
     },
     // 删除列表
-    delListData(index) {
-      this.tableData.splice(index, 1)
-    },
-    // 每页数变化
-    handleSizeChange(pageSize) {
-      this.pageParam.page = 0
-      this.pageParam.pageSize = pageSize
-      this.queryList()
-    },
-    // 页码变化
-    handleCurrentChange(currentPage) {
-      this.pageParam.page = currentPage - 1
-      this.queryList()
+    delListData(index, item) {
+      if (this.formData.sid) {
+        delCabinet(item.id).then(res => {
+          if (res.status === 200) {
+            this.tableData.splice(index, 1)
+          }
+        })
+      } else {
+        this.tableData.splice(index, 1)
+      }
     }
   }
 }
@@ -582,10 +605,10 @@ export default {
     width: 100%;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 10px;
+    right: 0px;
   }
 }
 </style>

@@ -36,6 +36,13 @@ const jypx = {
 
     },
     {
+      path: '/chart/index',
+      component: () => import('@/views/business/modules/deignManage/chart/index'),
+      name: '/chart/index',
+      meta: { title: '拓扑图', icon: 'menuSon' }
+
+    },
+    {
       path: '/putaway/index',
       component: () => import('@/views/business/modules/deignManage/putaway/index'),
       name: 'Putaway',

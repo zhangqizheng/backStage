@@ -237,40 +237,6 @@
 export default {
   data() {
     return {
-      // 抽屉开关
-      drawerFlag: false,
-      typeOption: [{
-        value: '1',
-        label: '设备1'
-      }, {
-        value: '2',
-        label: '设备2'
-      }, {
-        value: '3',
-        label: '设备3'
-      }, {
-        value: '4',
-        label: '设备4'
-      }, {
-        value: '5',
-        label: '设备5'
-      }],
-      roleOption: [{
-        value: '1',
-        label: '角色1'
-      }, {
-        value: '2',
-        label: '角色2'
-      }, {
-        value: '3',
-        label: '角色3'
-      }, {
-        value: '4',
-        label: '角色4'
-      }, {
-        value: '5',
-        label: '角色5'
-      }],
       firmOption: [{
         value: '1',
         label: '厂商1'
@@ -292,22 +258,6 @@ export default {
         page: 0,
         pageSize: 10
       },
-      // 新增数据
-      addForm: {
-        // 板卡配置
-        bkList: [
-          {
-            list: [
-              {
-                type: '',
-                num: '',
-                portOne: '',
-                portTwo: ''
-              }
-            ]
-          }
-        ]
-      },
       // 列表数据
       tableData: [
         {
@@ -316,7 +266,132 @@ export default {
           c: 'CT3',
           d: '缓存服务器',
           e: '1',
-          f: 'H3C',
+          f: '烽火',
+          g: 'S6805-54HF',
+          h: '海光 7265',
+          i: '2C64核',
+          j: '16*32G',
+          k: '2*1.8TSAS',
+          l: '24*16TSATA',
+          m: '4*32TPCIE NVMESSD',
+          n: '1',
+          o: '2XIntel 8378A(21Cores,3.0GHz)CPU',
+          p: '646W',
+          q: '2',
+          r: '交流',
+          s: '2*10A',
+          t: '44(1RU)x440x400',
+          u: '1',
+          v: '10',
+          w: '否'
+        },
+        {
+          a: '4U缓存服务器',
+          b: 1,
+          c: 'CT3',
+          d: '缓存服务器',
+          e: '1',
+          f: '四川虹信',
+          g: 'S6805-54HF',
+          h: 'Intel 5320',
+          i: '2C64核',
+          j: '16*32G',
+          k: '2*1.8TSAS',
+          l: '24*16TSATA',
+          m: '4*32TPCIE NVMESSD',
+          n: '1',
+          o: '2XIntel 8378A(21Cores,3.0GHz)CPU',
+          p: '646W',
+          q: '2',
+          r: '交流',
+          s: '2*10A',
+          t: '44(1RU)x440x400',
+          u: '1',
+          v: '10',
+          w: '否'
+        },
+        {
+          a: '4U缓存服务器',
+          b: 1,
+          c: 'CT3',
+          d: '缓存服务器',
+          e: '1',
+          f: '紫光',
+          g: 'S6805-54HF',
+          h: 'Kunpeng 5320',
+          i: '2C64核',
+          j: '16*32G',
+          k: '2*1.8TSAS',
+          l: '24*16TSATA',
+          m: '4*32TPCIE NVMESSD',
+          n: '1',
+          o: '2XIntel 8378A(21Cores,3.0GHz)CPU',
+          p: '646W',
+          q: '2',
+          r: '交流',
+          s: '2*10A',
+          t: '44(1RU)x440x400',
+          u: '1',
+          v: '10',
+          w: '否'
+        },
+        {
+          a: '4U缓存服务器',
+          b: 1,
+          c: 'CT3',
+          d: '缓存服务器',
+          e: '1',
+          f: '可控',
+          g: 'S6805-54HF',
+          h: 'X86',
+          i: '2C64核',
+          j: '16*32G',
+          k: '2*1.8TSAS',
+          l: '24*16TSATA',
+          m: '4*32TPCIE NVMESSD',
+          n: '1',
+          o: '2XIntel 8378A(21Cores,3.0GHz)CPU',
+          p: '646W',
+          q: '2',
+          r: '交流',
+          s: '2*10A',
+          t: '44(1RU)x440x400',
+          u: '1',
+          v: '10',
+          w: '否'
+        },
+        {
+          a: '4U缓存服务器',
+          b: 1,
+          c: 'CT3',
+          d: '缓存服务器',
+          e: '1',
+          f: '华为',
+          g: 'S6805-54HF',
+          h: '海光 7265',
+          i: '2C64核',
+          j: '16*32G',
+          k: '2*1.8TSAS',
+          l: '24*16TSATA',
+          m: '4*32TPCIE NVMESSD',
+          n: '1',
+          o: '2XIntel 8378A(21Cores,3.0GHz)CPU',
+          p: '646W',
+          q: '2',
+          r: '交流',
+          s: '2*10A',
+          t: '44(1RU)x440x400',
+          u: '1',
+          v: '10',
+          w: '否'
+        },
+        {
+          a: '4U缓存服务器',
+          b: 1,
+          c: 'CT3',
+          d: '缓存服务器',
+          e: '1',
+          f: '锐捷',
           g: 'S6805-54HF',
           h: 'X86',
           i: '2C64核',
@@ -343,6 +418,31 @@ export default {
           e: '1',
           f: 'H3C',
           g: 'S6805-54HF',
+          h: 'Kunpeng 5320',
+          i: '2C64核',
+          j: '16*32G',
+          k: '2*1.8TSAS',
+          l: '24*16TSATA',
+          m: '4*32TPCIE NVMESSD',
+          n: '1',
+          o: '2XIntel 8378A(21Cores,3.0GHz)CPU',
+          p: '646W',
+          q: '2',
+          r: '交流',
+          s: '2*10A',
+          t: '44(1RU)x440x400',
+          u: '1',
+          v: '10',
+          w: '否'
+        },
+        {
+          a: '4U缓存服务器',
+          b: 1,
+          c: 'CT3',
+          d: '缓存服务器',
+          e: '1',
+          f: '锐捷',
+          g: 'S6805-54HF',
           h: 'X86',
           i: '2C64核',
           j: '16*32G',
@@ -366,9 +466,34 @@ export default {
           c: 'CT3',
           d: '缓存服务器',
           e: '1',
-          f: 'H3C',
+          f: '华为',
           g: 'S6805-54HF',
-          h: 'X86',
+          h: '海光 7265',
+          i: '2C64核',
+          j: '16*32G',
+          k: '2*1.8TSAS',
+          l: '24*16TSATA',
+          m: '4*32TPCIE NVMESSD',
+          n: '1',
+          o: '2XIntel 8378A(21Cores,3.0GHz)CPU',
+          p: '646W',
+          q: '2',
+          r: '交流',
+          s: '2*10A',
+          t: '44(1RU)x440x400',
+          u: '1',
+          v: '10',
+          w: '否'
+        },
+        {
+          a: '4U缓存服务器',
+          b: 1,
+          c: 'CT3',
+          d: '缓存服务器',
+          e: '1',
+          f: '四川虹信',
+          g: 'S6805-54HF',
+          h: 'Intel 5320',
           i: '2C64核',
           j: '16*32G',
           k: '2*1.8TSAS',

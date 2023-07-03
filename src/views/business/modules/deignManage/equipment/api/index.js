@@ -2,7 +2,7 @@
 import request from '@/utils/request'
 import baseURL from '@/utils/baseUrl'
 
-// 机构列表
+// 设备列表
 export function getListData(data) {
   return request({
     method: 'get',
@@ -11,45 +11,30 @@ export function getListData(data) {
   })
 }
 
-// 机构详情
-export function getOrgDetail(data) {
-  return request({
-    method: 'get',
-    url: baseURL.jypx + 'insitute/audit/info',
-    params: data
-  })
-}
-
-// 机构审核
-export function auditOrg(data) {
+// 新增设备
+export function addDevice(data) {
+  console.log('data add:', data)
   return request({
     method: 'post',
-    url: baseURL.jypx + 'insitute/audit/save',
+    url: baseURL.jypx + '/device/add',
     data: data
   })
 }
 
-// 园地列表
-export function getFieldList(data) {
+// 编辑设备
+export function updateDevice(data) {
+  console.log('data add:', data)
   return request({
     method: 'post',
-    url: baseURL.jypx + 'gradenplot/audit/query',
+    url: baseURL.jypx + '/device/add',
     data: data
   })
 }
-// 园地详情
-export function getFieldDetail(data) {
+// 编辑设备
+export function getDeviceTemplate(data) {
   return request({
     method: 'get',
-    url: baseURL.jypx + 'gradenplot/audit/info',
+    url: baseURL.jypx + '/deviceTemplate/list',
     params: data
-  })
-}
-// 园地审核
-export function auditField(data) {
-  return request({
-    method: 'post',
-    url: baseURL.jypx + 'gradenplot/audit/save',
-    data: data
   })
 }

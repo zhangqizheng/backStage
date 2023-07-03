@@ -1,46 +1,52 @@
 <template>
   <div class="machineBox">
     <div class="handleList">
-      <el-button type="primary" plain size="mini" @click="drawerFlag = true">设备上架</el-button>
+      <el-button type="primary" plain size="mini" @click="openDrawer()">设备上架</el-button>
       <el-button type="primary" plain size="mini">下载上架图</el-button>
       <el-button type="primary" plain size="mini">设计定稿</el-button>
     </div>
     <!--使用draggable组件-->
     <div ref="machineList" class="machineList" @mousewheel.prevent="rollImg">
-      <div v-for="(item,index) in machineData" :key="index" class="machineItems">
-        <div class="machineName">
-          <div class="name">{{ item.machineName }}</div>
-          <div class="icon">
-            <i v-if="item.disabled" class="el-icon-lock" />
-            <i v-else class="el-icon-unlock" />
+      <div v-for="(row,i) in machineData" :key="i" class="rowList" :class="'row-' + i">
+        <div v-for="(item,index) in row" :key="index" class="machineItems">
+          <div class="machineName">
+            <div class="name">{{ item.name }}</div>
           </div>
-        </div>
-        <div class="machineContent">
-          <draggable
-            v-model="item.list"
-            :disabled="item.disabled"
-            :group="groupOption"
-            animation="300"
-            :move="onMove"
-            style="flex: 1;"
-            handle=".mover"
-            @start="onStart"
-            @end="onEnd"
-          >
-            <transition-group style="min-height:120px; display: block;" :class="'group-' + index">
-              <div
-                v-for="(items, indexs) in item.list"
-                :key="indexs"
-                class="item"
-                :class="items.name ? 'mover' : 'noBg'"
-                :style="getNewStyle(items)"
-              >
-                <div class="name">{{ items.name }}</div>
-              </div>
-            </transition-group>
-          </draggable>
-          <div class="numList">
-            <div v-for="(items,indexs) in item.allNum" :key="indexs">{{ Math.abs(items - 1 - item.allNum) }}</div>
+          <div class="machineContent">
+            <draggable
+              v-model="item.list"
+              :group="groupOption"
+              animation="300"
+              :move="onMove"
+              style="flex: 1;"
+              handle=".mover"
+              @start="onStart"
+              @end="onEnd"
+            >
+              <transition-group style="min-height:120px; display: block;" :class="'group-' + index">
+                <div
+                  v-for="(items, indexs) in item.list"
+                  :key="indexs"
+                  class="item"
+                  :class="[items.name ? 'mover' : 'noBg', items.locked ? 'locked' : '']"
+                  :style="getNewStyle(items)"
+                >
+                  <div class="name">{{ items.name }}</div>
+                  <!-- <div class="icon" v-show="!items.locked">
+                    <i v-if="!items.locked" class="el-icon-lock" />
+                    <i v-else class="el-icon-unlock" />
+                  </div> -->
+                </div>
+              </transition-group>
+            </draggable>
+            <div class="numList">
+              <div v-for="(items,indexs) in item.udigit" :key="indexs">{{ Math.abs(items - 1 - item.udigit) }}</div>
+            </div>
+          </div>
+          <div class="machineInfo">
+            <div>{{ item.spec }}</div>
+            <div>{{ item.power }}</div>
+            <div>{{ item.pdu }}</div>
           </div>
         </div>
       </div>
@@ -63,7 +69,7 @@
               <span class="title">选择上架设备</span>
             </div>
             <div class="allnumBox">
-              <div class="allNum">
+              <div class="udigit">
                 <i class="el-icon-document-copy" />
                 <span class="numTitle">设备总数 </span>
                 <span class="numVal">{{ addForm.deviceAllNum }}</span>
@@ -79,7 +85,7 @@
             <el-col :span="24">
               <el-form-item label="设备角色" prop="roleId">
                 <el-select
-                  v-model="deviceData"
+                  v-model="addForm.roleId"
                   style="width: 100%;"
                   placeholder="请选择设备角色"
                   value-key="id"
@@ -88,8 +94,8 @@
                   <el-option
                     v-for="item in roleOption"
                     :key="item.id"
-                    :label="item.label"
-                    :value="item"
+                    :label="item.name"
+                    :value="item.id"
                   />
                 </el-select>
               </el-form-item>
@@ -98,9 +104,13 @@
           <el-row :gutter="20">
             <el-col :span="24">
               <div class="numBox">
-                <div class="allNum">
+                <div class="udigit">
                   <span class="numTitle">所选设备数量</span>
                   <span class="numVal">{{ addForm.roleAllNum ? addForm.roleAllNum : 0 }}</span>
+                </div>
+                <div class="useNum">
+                  <span class="numTitle">所选设备已上架数量</span>
+                  <span class="numVal">{{ addForm.roleAllNum ? addForm.roleAllNum - addForm.roleCanNum : 0 }}</span>
                 </div>
                 <div class="upNum">
                   <span class="numTitle">所选设备可上架数量</span>
@@ -126,7 +136,7 @@
                   <el-option
                     v-for="item in cabinetOption"
                     :key="item.id"
-                    :label="item.label"
+                    :label="item.name"
                     :value="item.id"
                   />
                 </el-select>
@@ -135,8 +145,8 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="24">
-              <el-form-item label="单机柜预布放数量" prop="placeNum" label-width="150px">
-                <el-input-number v-model.number="addForm.placeNum" size="small" :min="1" :max="20" controls-position="right" style="width: 100px;" />
+              <el-form-item label="单机柜预布放数量" prop="count" label-width="150px">
+                <el-input-number v-model.number="addForm.count" size="small" :min="1" :max="addForm.roleCanNum" controls-position="right" style="width: 100px;" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -145,11 +155,26 @@
               <div class="ruleBox">
                 <div class="headTitle noMargin">
                   <span class="line" />
-                  <span class="title">默认上架规则</span>
+                  <span class="title">全局约束规则</span>
                 </div>
                 <div class="ruleList">
                   <div v-for="(item,index) in ruleList" :key="index" class="ruleItem">
-                    {{ item }}
+                    <el-checkbox v-model="checked" disabled style="margin-right: 10px;" />{{ item }}
+                  </div>
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="24">
+              <div class="ruleBox">
+                <div class="headTitle noMargin">
+                  <span class="line" />
+                  <span class="title">设备上架规则</span>
+                </div>
+                <div class="ruleList">
+                  <div v-for="(item,index) in ruleList2" :key="index" class="ruleItem">
+                    <el-checkbox v-model="checked" style="margin-right: 10px;" />{{ item }}
                   </div>
                 </div>
               </div>
@@ -174,7 +199,7 @@
 <script>
 // 导入draggable组件
 import draggable from 'vuedraggable'
-import { machineData } from './api/data'
+import { getListData, getRoleList, getAllCount, roleCount, deviceShelf, deviceCheck } from './api/index'
 export default {
   name: 'Putaway',
   // 注册draggable组件
@@ -186,21 +211,22 @@ export default {
       // 上架设备抽屉开关
       drawerFlag: false,
       ruleList: [
-        '1、单机柜布放设备占用U位数不能超过该机柜可用U位数;',
-        '2、单机柜布放设备占用插座数量不能超过该机柜可用插座数量;',
-        '3、单机柜布放设备占用功耗和不能超过该机柜可用功耗;',
-        '4、单次上架设备数量不能超过所选角色可上架设备数量;',
-        '5、若所选设备为服务器类型, 则由机柜底端最小可用U位数开始向上布放设备;',
-        '6、若所选设备为服务器类型, 则设备布放时默认在上方预留1U间隙;',
-        '7、若所选设备为交换机类型, 则由机柜上端最大可用U位数开始向下布放设备;',
-        '8、若所选设备为交换机类型, 则设备布放时默认在下方预留2U间隙 (用于理线架) ;'
+        '单机柜设备布放占用U位数不能超过该机柜可用U位数;',
+        '单机柜设备布放占用插座数量不能超过该机柜可用插座数量;',
+        '单机柜设备布放占用功耗和不能超过该机柜可用功耗;'
+      ],
+      ruleList2: [
+        '设备由机柜底端最小可用U位数开始向上布放设备 (适用于服务器设备);',
+        '设备布放时在上方预留1U间隙 (适用于服务器设备);',
+        '设备由机柜上端最大可用U位数开始向下布放设备 (适用于交换机设备);',
+        '间隙用于理线架，适用于交设备布放时在下方预留2U间隙换机设备) ;'
       ],
       // 上架设备数据
       addForm: {
         // 设备总数量
-        deviceAllNum: 600,
+        deviceAllNum: 0,
         // 可上架数量
-        deviceCanNum: 350,
+        deviceCanNum: 0,
         // 上架的机柜号
         cabinet: [],
         // 设备角色Id
@@ -210,7 +236,7 @@ export default {
         // 设备角色可上架数量
         roleCanNum: '',
         // 单机柜放置数量
-        placeNum: ''
+        count: ''
       },
       // 设备角色
       deviceData: {},
@@ -222,79 +248,19 @@ export default {
         pull: true,
         put: true
       },
-      roleOption: [
-        {
-          id: '1',
-          label: '用户日志存储服务器',
-          allNum: 30,
-          upNum: 12
-        }, {
-          id: '2',
-          label: '内容存储服务器',
-          allNum: 40,
-          upNum: 15
-        }, {
-          id: '3',
-          label: '监控告警服务器',
-          allNum: 63,
-          upNum: 42
-        }, {
-          id: '4',
-          label: '带外管理服务器',
-          allNum: 15,
-          upNum: 6
-        }, {
-          id: '5',
-          label: '省中心点播管理服务器',
-          allNum: 51,
-          upNum: 23
-        }
-      ],
-      cabinetOption: [
-        {
-          id: 'C-01',
-          label: 'C-01'
-        },
-        {
-          id: 'C-02',
-          label: 'C-02'
-        },
-        {
-          id: 'C-03',
-          label: 'C-03'
-        },
-        {
-          id: 'C-04',
-          label: 'C-04'
-        },
-        {
-          id: 'C-05',
-          label: 'C-05'
-        },
-        {
-          id: 'D-01',
-          label: 'D-01'
-        },
-        {
-          id: 'D-02',
-          label: 'D-02'
-        },
-        {
-          id: 'D-03',
-          label: 'D-03'
-        }
-      ],
+      roleOption: [],
+      cabinetOption: [],
       // 机柜数据
-      machineData: machineData,
+      machineData: [],
       dragObj: {},
       // 拖出对象
       fromObj: {},
       // 拖入对象
       toObj: {},
       // 拖出下标
-      fromIndex: 0,
+      fromIndex: null,
       // 拖入下标
-      toIndex: 0,
+      toIndex: null,
       // 空数组之在的样式，设置了这个样式才能拖入
       style: 'min-height:120px;display: block;',
       // 缩放比例
@@ -307,14 +273,21 @@ export default {
         cabinet: [
           { required: true, message: '请选择设备预上架机柜编号', trigger: 'change' }
         ],
-        placeNum: [
+        count: [
           { required: true, message: '请选择单机柜预布放数量', trigger: 'change' }
         ]
-      }
+      },
+      params: {
+        roomId: 1,
+        engineeringId: 1
+      },
+      toOldList: []
     }
   },
+  created() {
+    this.getListData()
+  },
   mounted() {
-    this.getMergeStyle()
     this.changeLoction()
   },
   methods: {
@@ -323,7 +296,21 @@ export default {
       console.log('上架设备', this.addForm)
       this.$refs.formInline.validate((valid) => {
         if (valid) {
-          this.drawerFlag = false
+          const params = { ...this.params, ...this.addForm }
+          deviceShelf(params).then(res => {
+            if (res.status === 200) {
+              this.$message({
+                type: 'success',
+                message: '上架成功'
+              })
+              this.getListData()
+              this.getDeviceNum()
+              this.getNum(this.addForm.roleId)
+            } else {
+              this.$message.error(res.data.exception_msg)
+            }
+          })
+          // this.drawerFlag = false
         }
       })
     },
@@ -345,41 +332,173 @@ export default {
       // 要放置的机柜下标
       this.dragObj.toIndex = e.to.className.split('-')[1]
       // 要放置数组下标
-      const toObjIndex = e.relatedContext.index
+      this.dragObj.toObjIndex = e.relatedContext.index
+      // 原机柜行下标
+      this.dragObj.oldRowIndex = e.from.parentNode.parentNode.parentNode.parentNode.className.split('-')[1]
+      // 现机柜行下标
+      this.dragObj.newRowIndex = e.to.parentNode.parentNode.parentNode.parentNode.className.split('-')[1]
       // 要放置数组
-      const toList = e.relatedContext.list
+      // const toList = e.relatedContext.list
       // 要放置数组上一条数据
-      const lastObj = toList[toObjIndex - 1]
+      // const lastObj = toList[this.dragObj.toObjIndex - 1]
       // 要放置数组下一条数据
-      const nextObj = toList[toObjIndex + 1]
-      console.log(lastObj, nextObj)
+      // const nextObj = toList[this.dragObj.toObjIndex + 1]
+
+      this.toOldList = this.machineData[this.dragObj.newRowIndex][this.dragObj.toIndex].list
+
+      console.log(this.dragObj.oldRowIndex, this.dragObj.newRowIndex)
     },
     // 拖拽结束事件
-    onEnd(e) {
-      // console.log('end', e)
+    onEnd() {
       this.drag = false
-      if (this.dragObj.fromIndex !== this.dragObj.toIndex) {
-        // 原机柜增加空
-        if (this.dragObj.fromObj.element.u > 0) {
-          console.log(this.dragObj.fromObj.element.u)
-          for (let i = 0; i < this.dragObj.fromObj.element.u; i++) {
-            // 拖出数组增加空层
-            const obj = { ...this.dragObj.fromObj.element, name: '', u: 0 }
-            this.machineData[this.dragObj.fromIndex].list.splice(this.dragObj.fromObj.index, 0, obj)
-            // 拖入数组删除空层
-            this.machineData[this.dragObj.toIndex].list.splice(this.dragObj.toObj.index + 1, 1)
-            this.$set(this.machineData[this.dragObj.toIndex].list[this.dragObj.toObj.index], 'id', Math.abs(this.dragObj.toObj.index - 43).toString())
-          }
+      // console.log(this.dragObj.fromIndex, this.dragObj.toIndex, this.dragObj.oldRowIndex, this.dragObj.newRowIndex)
 
-          // const obj = { ...this.dragObj.fromObj.element, name: '', u: 0 }
-          // this.machineData[this.dragObj.fromIndex].list.splice(this.dragObj.fromObj.index, 0, obj)
-
-          console.log('拖出下标', this.dragObj.fromObj.index)
-          console.log('拖入下标', this.dragObj.toObj.index)
-          console.log('拖出数据', this.machineData[this.dragObj.fromIndex].list[this.fromObj.index])
-          console.log('拖入数据', this.machineData[this.dragObj.toIndex].list[this.dragObj.toObj.index])
+      if (this.dragObj.fromIndex === this.dragObj.toIndex && this.dragObj.oldRowIndex === this.dragObj.newRowIndex) {
+        // 同一机柜拖拽
+        const obj = JSON.parse(JSON.stringify(this.dragObj.fromObj.element))
+        obj.u = 43 - this.dragObj.toObjIndex - (this.dragObj.fromObj.element.ucount - 1)
+        const arr = JSON.parse(JSON.stringify(this.machineData[this.dragObj.newRowIndex][this.dragObj.toIndex].list))
+        const nameArr = arr.filter(item => {
+          return item.name
+        })
+        const sameArr = nameArr.filter(item => {
+          return item.shelfId !== this.dragObj.fromObj.element.shelfId
+        })
+        sameArr.push(obj)
+        console.log('同一机柜拖拽', obj, nameArr, sameArr)
+        const params = {
+          ...this.machineData[this.dragObj.newRowIndex][this.dragObj.toIndex],
+          list: sameArr,
+          shelfId: this.dragObj.fromObj.element.shelfId,
+          u: this.dragObj.fromObj.element.u,
+          sameCabinet: true
         }
+        console.log(1111111111, params, this.dragObj)
+        deviceCheck(params).then(res => {
+          console.log(res)
+          if (res.status === 200) {
+            this.getListData()
+          } else {
+            this.$message.error(res.data.exception_msg)
+          }
+        })
+      } else {
+        // 不同机柜拖拽
+        const obj = JSON.parse(JSON.stringify(this.dragObj.fromObj.element))
+        obj.u = this.dragObj.toObj.element.u - (this.dragObj.fromObj.element.ucount - 1)
+        // console.log(2222222, obj)
+        const arr = JSON.parse(JSON.stringify(this.toOldList))
+        arr.push(obj)
+        const filterArr = arr.filter(item => {
+          return item.name
+        })
+        const newArr = filterArr.sort((a, b) => {
+          return b['u'] - a['u']
+        })
+        // console.log(333333333333, newArr)
+        const params = {
+          ...this.machineData[this.dragObj.newRowIndex][this.dragObj.toIndex],
+          list: newArr,
+          shelfId: this.dragObj.fromObj.element.shelfId,
+          u: this.dragObj.fromObj.element.u,
+          sameCabinet: false
+        }
+        console.log('不同机柜拖拽', params, this.dragObj)
+        deviceCheck(params).then(res => {
+          console.log(res)
+          if (res.status === 200) {
+            this.getListData()
+          } else {
+            this.$message.error(res.data.exception_msg)
+          }
+        })
       }
+
+      // if (this.dragObj.fromIndex !== this.dragObj.toIndex) {
+      //   // 原机柜增加空
+      //   if (this.dragObj.fromObj.element.ucount > 0) {
+      //     console.log(this.dragObj.fromObj.element.ucount)
+      //     for (let i = 0; i < this.dragObj.fromObj.element.ucount; i++) {
+      //       // 拖出数组增加空层
+      //       const obj = { ...this.dragObj.fromObj.element, name: '', u: 0 }
+      //       this.machineData[this.dragObj.newRowIndex][this.dragObj.fromIndex].list.splice(this.dragObj.fromObj.index, 0, obj)
+      //       // 拖入数组删除空层
+      //       this.machineData[this.dragObj.newRowIndex][this.dragObj.toIndex].list.splice(this.dragObj.toObj.index + 1, 1)
+      //       this.$set(this.machineData[this.dragObj.newRowIndex][this.dragObj.toIndex].list[this.dragObj.toObj.index], 'id', Math.abs(this.dragObj.toObj.index - 43).toString())
+      //     }
+
+      //     // const obj = { ...this.dragObj.fromObj.element, name: '', u: 0 }
+      //     // this.machineData[this.dragObj.newRowIndex][this.dragObj.fromIndex].list.splice(this.dragObj.fromObj.index, 0, obj)
+
+      //     console.log('拖出下标', this.dragObj.fromObj.index)
+      //     console.log('拖入下标', this.dragObj.toObj.index)
+      //     console.log('拖出数据', this.machineData[this.dragObj.newRowIndex][this.dragObj.fromIndex].list[this.fromObj.index])
+      //     console.log('拖入数据', this.machineData[this.dragObj.newRowIndex][this.dragObj.toIndex].list[this.dragObj.toObj.index])
+      //   }
+      // }
+    },
+    // 获取数据
+    getListData() {
+      getListData(this.params).then(res => {
+        if (res.status === 200) {
+          this.cabinetOption = []
+          this.machineData = res.body
+          console.log(res, this.machineData)
+          this.machineData.forEach(item => {
+            item.forEach(items => {
+              const arr = []
+              for (let i = items.list.length - 1; i >= 0; i--) {
+                arr.push(items.list[i])
+              }
+              items.list = arr
+              this.getMergeStyle(items.list)
+              this.cabinetOption.push({
+                id: items.scId,
+                name: items.name
+              })
+            })
+          })
+        }
+      })
+    },
+    // 打开抽屉
+    openDrawer() {
+      this.drawerFlag = true
+      this.roleOption = []
+      this.getDeviceNum()
+    },
+    // 获取设备数量
+    getNum(item) {
+      const params = {
+        ...this.params,
+        role: item
+      }
+      roleCount(params).then(res => {
+        if (res.status === 200) {
+          this.addForm.roleAllNum = res.body.total
+          this.addForm.roleCanNum = res.body.total - res.body.shelfTotal
+        }
+      })
+    },
+    // 获取设备数量
+    getDeviceNum() {
+      getRoleList(this.params).then(res => {
+        if (res.status === 200) {
+          res.body.forEach(item => {
+            this.roleOption.push({
+              id: item,
+              name: this.dictMap.device_role[item]
+            })
+          })
+          console.log(this.roleOption)
+        }
+      })
+      getAllCount(this.params).then(res => {
+        if (res.status === 200) {
+          this.addForm.deviceAllNum = res.body.total
+          this.addForm.deviceCanNum = res.body.shelfTotal
+        }
+      })
     },
     // 拖拽
     changeLoction() {
@@ -422,33 +541,24 @@ export default {
       }
     },
     // 数据初始化
-    getMergeStyle() {
-      this.machineData.forEach(item => {
-        item.list.forEach((items, index) => {
-          if (items.u > 1) {
-            for (let i = 1; i < items.u; i++) {
-              item.list.splice(index + 1, 1)
-            }
+    getMergeStyle(list) {
+      list.forEach((items, index) => {
+        if (items.ucount > 1) {
+          for (let i = 1; i < items.ucount; i++) {
+            list.splice(index - 1, 1)
           }
-        })
+        }
       })
     },
     // 合并列
     getNewStyle(item) {
       const oneU = { height: '20px' }
-      const moreU = { height: 20 * item.u + 'px' }
-      if (item.u === 1 || item.u === 0) {
+      const moreU = { height: 20 * item.ucount + 'px' }
+      if (item.ucount === 1 || item.ucount === 0) {
         return oneU
       } else {
         return moreU
       }
-    },
-    // 获取设备数量
-    getNum(item) {
-      this.addForm.roleId = item.id
-      this.addForm.roleAllNum = item.allNum
-      this.addForm.roleCanNum = item.upNum
-      console.log(this.addForm.role, this.addForm.roleAllNum, this.addForm.roleCanNum)
     }
   }
 }
@@ -471,10 +581,12 @@ export default {
     z-index: 9;
   }
   .machineList {
-    width: 100%;
-    display: flex;
     position: absolute;
     top: 40px;
+    .rowList{
+      display: flex;
+      margin-bottom: 20px;
+    }
     .machineName{
       width: 100%;
       display: flex;
@@ -501,18 +613,26 @@ export default {
         padding: 0 12px;
         line-height: 20px;
         border: solid 1px #aaa;
-        background-color: #f1f1f1;
+        background-color: #38d700;
         display: flex;
         justify-content: center;
         align-items: center;
         border-top: 0;
         font-size: 12px;
+        position: relative;
+        .icon{
+          position: absolute;
+          left: 2px;
+        }
       }
       .item:hover {
         cursor: move;
       }
       .noBg {
         background: #fff;
+      }
+      .locked{
+        background: #f1f1f1;
       }
       .numList{
         width: 30px;
@@ -528,6 +648,12 @@ export default {
           border-left: 0;
         }
       }
+    }
+    .machineInfo{
+      width: 100%;
+      text-align: center;
+      line-height: 20px;
+      margin-top: 10px;
     }
     .machineItems + .machineItems {
       margin-left: 30px;
@@ -572,7 +698,7 @@ export default {
             font-weight: 700;
           }
         }
-        .allNum{
+        .udigit{
           margin-right: 20px;
         }
       }
@@ -591,6 +717,7 @@ export default {
         background: #1890ff10;
         padding: 10px;
         box-sizing: border-box;
+        margin-right: 20px;
         .numVal{
           font-size: 16px;
         }
@@ -598,18 +725,19 @@ export default {
           color: #00a6ff;
         }
       }
-      .allNum{
-        margin-right: 20px;
+      .udigit{
         margin-left: 20px;
       }
     }
     .ruleBox{
       width: 100%;
       .ruleList{
-        margin-top: 10px;
+        margin: 10px 0;
         >div{
           padding: 6px 0 6px 20px;
           color: #666;
+          display: flex;
+          align-items: center;
         }
       }
     }
@@ -622,6 +750,11 @@ export default {
     justify-content: flex-end;
     padding: 20px;
     box-sizing: border-box;
+  }
+}
+::v-deep{
+  .el-form-item{
+    margin-bottom: 10px;
   }
 }
 </style>

@@ -24,7 +24,7 @@ import '@/icons' // 图标
 import '@/permission' // 权限控制
 import '@/utils/error-log' // 错误日志
 // 字典
-import dictList from './utils/dictMap'
+import { dict, dictMap } from './utils/dict'
 import * as filters from '@/filters' // 全局过滤器
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
@@ -36,15 +36,11 @@ Vue.use(VueCropper)
 // 图像裁剪end
 Vue.prototype.$EventBus = new Vue()
 // 字典
-Vue.prototype.dictMap = {}
-Vue.prototype.dictKeyMap = {}
-Vue.prototype.$getNewType = dictList.getNewType
 Vue.prototype.$bus = bus
-setTimeout(() => {
-  // 字典
-  Vue.prototype.dictMap = store.state.dict.dictMap
-  Vue.prototype.dictKeyMap = store.state.dict.dictKeyMap
-}, 1000)
+// 字典
+Vue.prototype.dict = dict
+
+Vue.prototype.dictMap = dictMap
 // 字典假数据
 import shamData from './utils/shamData'
 Vue.prototype.shamData = shamData.data
